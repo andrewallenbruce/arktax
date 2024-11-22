@@ -6,7 +6,8 @@ Authors@R:
 Maintainer: Andrew Bruce <andrewallenbruce@gmail.com>
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
-URL: https://github.com/andrewallenbruce/arktax
+URL: https://github.com/andrewallenbruce/arktax,
+    https://andrewallenbruce.github.io/arktax/
 BugReports: https://github.com/andrewallenbruce/arktax/issues
 Suggests: 
     roxyglobals,
