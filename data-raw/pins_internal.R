@@ -1,4 +1,4 @@
-pin_update <- function(x, name, title, description) {
+pin_update <- function(x, name, title, description, force = FALSE) {
 
   board <- pins::board_folder(
     here::here("inst/extdata/pins"))
@@ -9,7 +9,8 @@ pin_update <- function(x, name, title, description) {
       name        = name,
       title       = title,
       description = description,
-      type        = "qs")
+      type        = "qs",
+      force_identical_write = force)
 
   board |> pins::write_board_manifest()
 }

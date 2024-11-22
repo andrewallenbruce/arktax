@@ -1,0 +1,10 @@
+file: tax_v_10.qs
+file_size: 82399
+pin_hash: 7a35826978edb537
+type: qs
+title: Taxonomy Codeset v10.0
+description: Health Care Provider Taxonomy Code Set, Version 10.1, Released 2010-01-01
+tags: ~
+urls: ~
+created: 20241122T094232Z
+api_version: 1
