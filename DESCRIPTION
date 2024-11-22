@@ -9,6 +9,10 @@ License: MIT + file LICENSE
 URL: https://github.com/andrewallenbruce/arktax,
     https://andrewallenbruce.github.io/arktax/
 BugReports: https://github.com/andrewallenbruce/arktax/issues
+Imports: 
+    fs,
+    glue,
+    pins
 Suggests: 
     roxyglobals,
     testthat (>= 3.0.0)
