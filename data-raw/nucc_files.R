@@ -42,7 +42,8 @@ curl::multi_download(
 
 ###################################################################
 
-infotable <- readr::read_csv(glue::glue("{here::here()}/posts/taxonomy/data/infotable.csv"), show_col_types = FALSE, col_types = "ccDc")
+infotable  <- readr::read_csv(glue::glue("{here::here()}/data-raw/raw/infotable.csv"), show_col_types = FALSE, col_types = "ccDc")
+nucc_paths <- fs::dir_info(glue::glue("{here::here()}/data-raw/raw/csvs"))$path
 
 clean_cols <- \(x) fuimus::remove_quotes(stringr::str_squish(dplyr::na_if(x, "")))
 
@@ -52,7 +53,6 @@ notes_regs <- c("http[s]?:" = "", "//" = "", "<br/>" = " ", "<br><br>" = " ",
                 # "([0-9]{1,2})//([0-9]{1,2})//([0-9]{4})" = "",
                 "�" = "")
 
-nucc_paths <- fs::dir_info(glue::glue("{here::here()}/posts/taxonomy/data/csvs"))$path
 
 parse_nucc_csvs <- function(path) {
 
@@ -83,3 +83,15 @@ parse_nucc_csvs <- function(path) {
 
 purrr::walk(nucc_paths, parse_nucc_csvs)
 
+##################### ARCHIVE
+archive::archive_write_files(
+  archive = here::here("data-raw/raw/nucc_taxonomy.tar.xz"),
+  files = c(
+    glue::glue("{here::here()}/data-raw/raw/infotable.csv"),
+    fs::dir_info(glue::glue("{here::here()}/data-raw/raw/csvs"))$path
+    )
+  )
+
+fs::dir_delete(
+  glue::glue("{here::here()}/data-raw/raw/csvs")
+)
