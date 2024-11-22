@@ -83,7 +83,7 @@ parse_nucc_csvs <- function(path) {
 
 purrr::walk(nucc_paths, parse_nucc_csvs)
 
-##################### ARCHIVE
+# ARCHIVE
 archive::archive_write_files(
   archive = here::here("data-raw/raw/nucc_taxonomy.tar.xz"),
   files = c(
@@ -92,6 +92,12 @@ archive::archive_write_files(
     )
   )
 
-fs::dir_delete(
-  glue::glue("{here::here()}/data-raw/raw/csvs")
-)
+# fs::dir_delete(glue::glue("{here::here()}/data-raw/raw/csvs"))
+
+archive::archive(file = here::here("data-raw/raw/nucc_taxonomy.tar.xz"))
+
+readr::read_csv(
+  file = archive::archive_read(archive = here::here("data-raw/raw/nucc_taxonomy.tar.xz"), file = 1L),
+  show_col_types = FALSE,
+  col_types = "c",
+  name_repair = janitor::make_clean_names)
