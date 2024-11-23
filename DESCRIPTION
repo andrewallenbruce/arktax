@@ -1,5 +1,5 @@
 Package: arktax
-Title: What the Package Does (One Line, Title Case)
+Title: Archive: NUCC Taxonomy Codesets, 2009 - 2024
 Version: 0.0.0.9000
 Authors@R: 
     person("Andrew", "Bruce", , "andrewallenbruce@gmail.com", role = c("aut", "cre", "cph"))
@@ -10,12 +10,18 @@ URL: https://github.com/andrewallenbruce/arktax,
     https://andrewallenbruce.github.io/arktax/
 BugReports: https://github.com/andrewallenbruce/arktax/issues
 Imports: 
+    data.table,
+    dplyr,
     fs,
+    fuimus,
     glue,
     pins
 Suggests: 
     roxyglobals,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    qs
+Remotes: 
+    andrewallenbruce/fuimus
 Config/roxyglobals/filename: generated-globals.R
 Config/roxyglobals/unique: TRUE
 Config/testthat/edition: 3

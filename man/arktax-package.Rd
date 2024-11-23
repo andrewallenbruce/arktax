@@ -4,7 +4,7 @@
 \name{arktax-package}
 \alias{arktax}
 \alias{arktax-package}
-\title{arktax: What the Package Does (One Line, Title Case)}
+\title{arktax: Archive: NUCC Taxonomy Codesets, 2009 - 2024}
 \description{
 What the package does (one paragraph).
 }
