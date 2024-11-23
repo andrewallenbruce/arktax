@@ -1,0 +1,10 @@
+file: ark_taxonomy.qs
+file_size: 1185829
+pin_hash: 27310a12cf55e09b
+type: qs
+title: NUCC Taxonomy Archive 2009-2024
+description: Health Care Provider Taxonomy Code Set Archive 2009-2024
+tags: ~
+urls: ~
+created: 20241123T123536Z
+api_version: 1
