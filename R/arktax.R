@@ -1,32 +1,35 @@
 #' Get Taxomony Source File
 #'
-#' @param year `<int>` year of rvu source file; default is `2020`
+#' @param year `<int>` year of source file release; options are `2009:2024`
 #'
 #' @param code `<chr>` Taxonomy code
+#'
+#' @param which `<chr>` wide or long version of the taxonomy; options are `wide` or `long`
 #'
 #' @returns `<tibble>` of search results
 #'
 #' @examples
-#' retrieve_ark(2024, "101Y00000X")
+#' retrieve_ark(year = 2024, code = "101Y00000X", which = "wide")
 #'
-#' @importFrom dplyr mutate
-#' @importFrom data.table year
+#' retrieve_ark(year = 2024, code = "101Y00000X", which = "long")
+#'
 #' @importFrom fuimus search_in_if
 #'
 #' @autoglobal
 #'
 #' @export
-retrieve_ark <- function(year = 2024, code = NULL) {
+retrieve_ark <- function(year = NULL,
+                         code = NULL,
+                         which = c("wide", "long")) {
 
-  ark <- get_pin("ark_taxonomy") |>
-    mutate(year = as.character(year(release_date)))
-
-  year <- match.arg(
-    arg = as.character(year),
-    choices = as.character(ark[["year"]]),
-    several.ok = TRUE)
+  ark <- switch(
+    which,
+    wide = get_pin("ark_taxonomy"),
+    long = get_pin("ark_long")
+  )
 
   ark <- search_in_if(ark, ark[["year"]], year)
+
   ark <- search_in_if(ark, ark[["code"]], code)
 
   return(ark)

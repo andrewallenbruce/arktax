@@ -4,12 +4,14 @@
 \alias{retrieve_ark}
 \title{Get Taxomony Source File}
 \usage{
-retrieve_ark(year = 2024, code = NULL)
+retrieve_ark(year = NULL, code = NULL, which = c("wide", "long"))
 }
 \arguments{
-\item{year}{\verb{<int>} year of rvu source file; default is \code{2020}}
+\item{year}{\verb{<int>} year of source file release; options are \code{2009:2024}}
 
 \item{code}{\verb{<chr>} Taxonomy code}
+
+\item{which}{\verb{<chr>} wide or long version of the taxonomy; options are \code{wide} or \code{long}}
 }
 \value{
 \verb{<tibble>} of search results
@@ -18,6 +20,8 @@ retrieve_ark(year = 2024, code = NULL)
 Get Taxomony Source File
 }
 \examples{
-retrieve_ark(2024, "101Y00000X")
+retrieve_ark(year = 2024, code = "101Y00000X", which = "wide")
+
+retrieve_ark(year = 2024, code = "101Y00000X", which = "long")
 
 }
