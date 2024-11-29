@@ -10,10 +10,13 @@ URL: https://github.com/andrewallenbruce/arktax,
     https://andrewallenbruce.github.io/arktax/
 BugReports: https://github.com/andrewallenbruce/arktax/issues
 Imports: 
+    cli,
     fs,
     fuimus,
     glue,
-    pins
+    pins,
+    rlang,
+    stringfish
 Suggests:
     qs,
     roxyglobals,

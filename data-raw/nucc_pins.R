@@ -165,6 +165,12 @@ pin_update(
   description = "Health Care Provider Taxonomy Code Set Archive 2009-2024 (Long)"
 )
 
+get_pin("ark_long") |>
+  dplyr::count(code, level, sort = TRUE) |>
+  dplyr::filter(n > 1) |>
+  dplyr::pull(code)
+
+
 ark_long |>
   dplyr::group_by(code) |>
   dplyr::mutate(years = ivs::iv(min(year), max(year))) |>
