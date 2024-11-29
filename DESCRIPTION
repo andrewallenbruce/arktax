@@ -13,7 +13,6 @@ Imports:
     cli,
     fs,
     fuimus,
-    glue,
     pins,
     rlang,
     stringfish
