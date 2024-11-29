@@ -1,10 +1,10 @@
 file: ark_long.qs
-file_size: 26012
-pin_hash: c6e54d54d4b7fdd4
+file_size: 13738
+pin_hash: 13827f0ad127660e
 type: qs
 title: NUCC Taxonomy Archive 2009-2024 (Long)
 description: Health Care Provider Taxonomy Code Set Archive 2009-2024 (Long)
 tags: ~
 urls: ~
-created: 20241124T223231Z
+created: 20241129T111715Z
 api_version: 1

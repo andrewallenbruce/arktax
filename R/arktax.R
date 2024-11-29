@@ -2,16 +2,18 @@
 #'
 #' @param year `<int>` year of source file release; options are `2009:2024`
 #'
-#' @param code `<chr>` Taxonomy code
+#' @param version `<int>` version of source file; options are `0` or `1`
 #'
-#' @param which `<chr>` wide or long version of the taxonomy; options are `wide` or `long`
+#' @param code `<chr>`  Health Care Provider Taxonomy code, a unique alphanumeric code, ten characters in length
+#'
+#' @param which `<chr>` `wide` or `long` version of the taxonomy
 #'
 #' @returns `<tibble>` of search results
 #'
 #' @examples
 #' retrieve_ark(year = 2024, code = "101Y00000X", which = "wide")
 #'
-#' retrieve_ark(year = 2024, code = "101Y00000X", which = "long")
+#' retrieve_ark(code = "101Y00000X", which = "long")
 #'
 #' @importFrom fuimus search_in_if
 #'
@@ -19,6 +21,7 @@
 #'
 #' @export
 retrieve_ark <- function(year = NULL,
+                         version = NULL,
                          code = NULL,
                          which = c("wide", "long")) {
 
@@ -28,7 +31,10 @@ retrieve_ark <- function(year = NULL,
     long = get_pin("ark_long")
   )
 
-  ark <- search_in_if(ark, ark[["year"]], year)
+  if (which == "wide") {
+    ark <- search_in_if(ark, ark[["year"]], year)
+    ark <- search_in_if(ark, ark[["version"]], version)
+  }
 
   ark <- search_in_if(ark, ark[["code"]], code)
 

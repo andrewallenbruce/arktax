@@ -2,7 +2,7 @@ Package: arktax
 Title: Archive: NUCC Taxonomy Codesets, 2009 - 2024
 Version: 0.0.0.9000
 Authors@R: 
-    person("Andrew", "Bruce", , "andrewallenbruce@gmail.com", role = c("aut", "cre", "cph"))
+    person(c("Andrew", "Allen"), "Bruce", , "andrewallenbruce@gmail.com", role = c("aut", "cre", "cph"))
 Maintainer: Andrew Bruce <andrewallenbruce@gmail.com>
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
@@ -17,7 +17,7 @@ Imports:
 Suggests:
     qs,
     roxyglobals,
-    testthat (>= 3.0.0),
+    testthat (>= 3.0.0)
 Remotes: 
     andrewallenbruce/fuimus
 Config/roxyglobals/filename: generated-globals.R

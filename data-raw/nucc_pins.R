@@ -155,6 +155,9 @@ ark_long |>
   dplyr::arrange(year) |>
   print(n = 100)
 
+# ark_long <- get_pin("ark_long") |>
+#   dplyr::distinct(code, level, description)
+
 pin_update(
   ark_long,
   name = "ark_long",
@@ -168,6 +171,3 @@ ark_long |>
   dplyr::arrange(code, level, year) |>
   dplyr::filter(code == "133VN1201X") |>
   print(n = 100)
-
-
-
