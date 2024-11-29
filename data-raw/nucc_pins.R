@@ -52,8 +52,8 @@ ark_spt$N <- ark_spt$N |>
 ark_spt <- vctrs::vec_rbind(ark_spt$Y, ark_spt$N)
 
 pin_update(
-  ark_spt,
-  name = "ark_taxonomy",
+  raw,
+  name = "raw",
   title = "NUCC Taxonomy Archive 2009-2024",
   description = "Health Care Provider Taxonomy Code Set Archive 2009-2024"
 )
@@ -150,19 +150,16 @@ ark_long <- ark_long |>
   tidyr::fill(nlevels, nyears)
 
 
-ark_long |>
-  dplyr::filter(code == "101Y00000X") |>
-  dplyr::arrange(year) |>
-  print(n = 100)
-
-# ark_long <- get_pin("ark_long") |>
-#   dplyr::distinct(code, level, description)
+hierarchy <- get_pin("ark_long") |>
+  dplyr::mutate(id = dplyr::consecutive_id(level), .by = code) |>
+  dplyr::filter(id != dplyr::lag(id, default = 0)) |>
+  dplyr::select(-id)
 
 pin_update(
-  ark_long,
-  name = "ark_long",
-  title = "NUCC Taxonomy Archive 2009-2024 (Long)",
-  description = "Health Care Provider Taxonomy Code Set Archive 2009-2024 (Long)"
+  hierarchy,
+  name = "hierarchy",
+  title = "NUCC Taxonomy Gierarchy",
+  description = "Health Care Provider Taxonomy Code Set Archive 2009-2024 (Hierarchy)"
 )
 
 get_pin("ark_long") |>

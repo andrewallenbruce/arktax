@@ -1,4 +1,4 @@
-file: ark_taxonomy.qs
+file: raw.qs
 file_size: 290511
 pin_hash: 052526a3936f8fa7
 type: qs
@@ -6,5 +6,5 @@ title: NUCC Taxonomy Archive 2009-2024
 description: Health Care Provider Taxonomy Code Set Archive 2009-2024
 tags: ~
 urls: ~
-created: 20241124T214441Z
+created: 20241129T184741Z
 api_version: 1

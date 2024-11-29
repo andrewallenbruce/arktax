@@ -1,4 +1,4 @@
-#' Retrieve Taxonomy Source File
+#' Raw Taxonomy File
 #'
 #' @param year `<int>` year of source file release; options are `2009:2024`
 #'
@@ -10,27 +10,27 @@
 #' @returns `<tibble>` of search results
 #'
 #' @examples
-#' retrieve_raw(year = 2024, code = "101Y00000X")
+#' taxonomy_raw(year = 2024, code = "101Y00000X")
 #'
-#' retrieve_raw(code = "101Y00000X")
+#' taxonomy_raw(code = "101Y00000X")
 #'
 #' @importFrom fuimus search_in_if
 #'
 #' @autoglobal
 #'
 #' @export
-retrieve_raw <- function(year = NULL,
+taxonomy_raw <- function(year = NULL,
                          version = NULL,
                          code = NULL) {
   check_nchar(code, 10)
-  pin <- get_pin("ark_taxonomy")
+  pin <- get_pin("raw")
   pin <- search_in_if(pin, pin[["year"]], year)
   pin <- search_in_if(pin, pin[["version"]], version)
   pin <- search_in_if(pin, pin[["code"]], code)
   return(pin)
 }
 
-#' Retrieve Taxonomy Sources
+#' Taxonomy Sources
 #'
 #' @param code `<chr>`  Health Care Provider Taxonomy code, a unique
 #'   alphanumeric code, ten characters in length
@@ -38,22 +38,22 @@ retrieve_raw <- function(year = NULL,
 #' @returns `<tibble>` of search results
 #'
 #' @examples
-#' retrieve_sources(code = "101Y00000X")
+#' taxonomy_sources(code = "101Y00000X")
 #'
-#' retrieve_sources(code = "103TA0400X")
+#' taxonomy_sources(code = "103TA0400X")
 #'
 #' @importFrom fuimus search_in_if
 #'
 #' @autoglobal
 #'
 #' @export
-retrieve_sources <- function(code = NULL) {
+taxonomy_sources <- function(code = NULL) {
   check_nchar(code, 10)
   pin <- get_pin("sources")
   search_in_if(pin, pin[["code"]], code)
 }
 
-#' Retrieve Taxonomy Changelog
+#' Taxonomy Change Log
 #'
 #' @param code `<chr>`  Health Care Provider Taxonomy code, a unique
 #'   alphanumeric code, ten characters in length
@@ -61,22 +61,22 @@ retrieve_sources <- function(code = NULL) {
 #' @returns `<tibble>` of search results
 #'
 #' @examples
-#' retrieve_changelog(code = "103GC0700X")
+#' taxonomy_changelog(code = "103GC0700X")
 #'
-#' retrieve_changelog(code = "103G00000X")
+#' taxonomy_changelog(code = "103G00000X")
 #'
 #' @importFrom fuimus search_in_if
 #'
 #' @autoglobal
 #'
 #' @export
-retrieve_changelog <- function(code = NULL) {
+taxonomy_changelog <- function(code = NULL) {
   check_nchar(code, 10)
   pin <- get_pin("changelog")
   search_in_if(pin, pin[["code"]], code)
 }
 
-#' Retrieve Taxonomy Hierarchy
+#' Taxonomy Hierarchy
 #'
 #' @param code `<chr>`  Health Care Provider Taxonomy code, a unique
 #'   alphanumeric code, ten characters in length
@@ -84,21 +84,20 @@ retrieve_changelog <- function(code = NULL) {
 #' @returns `<tibble>` of search results
 #'
 #' @examples
-#' retrieve_hierarchy(code = "101Y00000X")
+#' taxonomy_hierarchy(code = "101Y00000X")
 #'
-#' retrieve_hierarchy(code = "103TA0400X")
+#' taxonomy_hierarchy(code = "103TA0400X")
 #'
 #' @importFrom fuimus search_in_if
 #'
 #' @autoglobal
 #'
 #' @export
-retrieve_hierarchy <- function(code = NULL) {
+taxonomy_hierarchy <- function(code = NULL) {
   check_nchar(code, 10)
-  pin <- get_pin("ark_long")
+  pin <- get_pin("hierarchy")
   search_in_if(pin, pin[["code"]], code)
 }
-
 
 #' Check that input is `n` character(s) long
 #'

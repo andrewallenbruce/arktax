@@ -1,0 +1,10 @@
+file: hierarchy.qs
+file_size: 13373
+pin_hash: 582c1ecdec65c40d
+type: qs
+title: NUCC Taxonomy Gierarchy
+description: Health Care Provider Taxonomy Code Set Archive 2009-2024 (Hierarchy)
+tags: ~
+urls: ~
+created: 20241129T184550Z
+api_version: 1
