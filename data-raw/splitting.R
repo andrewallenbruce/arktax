@@ -1,10 +1,7 @@
 source(here::here("data-raw", "pins_internal.R"))
 
 # Use wide version
-wide <- arktax::retrieve_ark(
-  year = 2024,
-  version = 1,
-  which = "wide") |>
+wide <- arktax::taxonomy_raw(year = 2024, version = 1) |>
   dplyr::select(-year, -version) |>
   fuimus::remove_quiet()
 
@@ -69,6 +66,11 @@ sources <- vctrs::vec_rbind(
 # 2008-07-01
 # Additional Resources: The American Osteopathic Board of Radiology no longer offers a certificate in this specialty.
 # Note: In medical practice, Diagnostic Ultrasound is part of the scope of training and practice of a Diagnostic Radiologist - see Taxonomy Code 2085R0202X.
+
+sources <- get_pin("sources") |>
+  dplyr::rename(
+    source = type,
+    text = source)
 
 pin_update(
   sources,
@@ -138,6 +140,58 @@ updates <- vctrs::vec_rbind(
     date = dates,
     change = stringr::str_replace(updates, "^marked inactive, use value ", "marked inactive, use "))
 
+updates <- get_pin("changelog") |>
+  dplyr::mutate(
+    change = dplyr::case_match(
+      change,
+      c("definition added, source added",
+        "added definition, added source",
+        "definition changed, source added",
+        "definition changed, source changed",
+        "definition modified, source modified",
+        "modified definition, modified source",
+        "changed definition, added source",
+        "definition added, source added, additional resources added",
+        "definition changed, added source") ~ "definition, source",
+      c("modified source") ~ "source",
+      c("modified definition",
+        "definition added",
+        "new definition",
+        "definition modified",
+        "definition reformatted",
+        "added definition",
+        "Definition modified",
+        "corrected definition",
+        "definition corrected") ~ "definition",
+      "marked inactive" ~ "deactivated",
+      "modified" ~ "unspecified",
+      c("title modified",
+        "modified title",
+        "changed title") ~ "title",
+      c("title modified, definition added",
+        "title and definition modified",
+        "title modified, definition modified",
+        "modified title, added definition",
+        "modified title, modified definition",
+        "modified title and definition",
+        "title modified, definition modfied") ~ "definition, title",
+      "modified title, added source" ~ "title, source",
+      c("title modified, definition added, source added",
+        "definition added, source added, title changed",
+        "title changed, definition added, source added",
+        "title changed, definition changed, source changed") ~ "definition, title, source",
+      "code modified, title modified, definition added" ~ "code, definition, title",
+      "marked inactive, use 103G00000X" ~ "use 103G00000X",
+      "marked inactive, use 183500000X" ~ "use 183500000X",
+      "marked inactive, use 213E00000X" ~ "use 213E00000X",
+      "source added, additional resources added" ~ "source",
+      .default = change)) |>
+  dplyr::rename(
+    details = change,
+    change = date_type) |>
+  dplyr::select(code, date, change, details)
+
+
 pin_update(
   updates,
   "changelog",
@@ -169,3 +223,31 @@ arktax::retrieve_ark(which = "wide") |>
   dplyr::select(code, deactivated) |>
   dplyr::filter(codex::not_na(deactivated)) |>
   dplyr::distinct()
+
+
+#-------DISPLAY NAME
+display <- arktax::taxonomy_raw(year = 2024, version = 1) |>
+  dplyr::select(code, display_name)
+
+pin_update(
+  display,
+  "display",
+  "NUCC Taxonomy Display Names 2009-2024",
+  "Health Care Provider Taxonomy Code Set Display Names 2009-2024"
+)
+
+#-------DEFINITION
+definitions <- arktax::taxonomy_raw(year = 2024, version = 1) |>
+  dplyr::select(code, definition) |>
+  dplyr::mutate(
+    definition = dplyr::if_else(
+      codex::na(definition),
+      "None",
+      definition))
+
+pin_update(
+  definitions,
+  "definitions",
+  "NUCC Taxonomy Definitions 2009-2024",
+  "Health Care Provider Taxonomy Code Set Definitions 2009-2024"
+)

@@ -99,6 +99,52 @@ taxonomy_hierarchy <- function(code = NULL) {
   search_in_if(pin, pin[["code"]], code)
 }
 
+#' Taxonomy Display Names
+#'
+#' @param code `<chr>`  Health Care Provider Taxonomy code, a unique
+#'   alphanumeric code, ten characters in length
+#'
+#' @returns `<tibble>` of search results
+#'
+#' @examples
+#' taxonomy_display(code = "101Y00000X")
+#'
+#' taxonomy_display(code = "103TA0400X")
+#'
+#' @importFrom fuimus search_in_if
+#'
+#' @autoglobal
+#'
+#' @export
+taxonomy_display <- function(code = NULL) {
+  check_nchar(code, 10)
+  pin <- get_pin("display")
+  search_in_if(pin, pin[["code"]], code)
+}
+
+#' Taxonomy Definitions
+#'
+#' @param code `<chr>`  Health Care Provider Taxonomy code, a unique
+#'   alphanumeric code, ten characters in length
+#'
+#' @returns `<tibble>` of search results
+#'
+#' @examples
+#' taxonomy_definition(code = "101Y00000X")
+#'
+#' taxonomy_definition(code = "103TA0400X")
+#'
+#' @importFrom fuimus search_in_if
+#'
+#' @autoglobal
+#'
+#' @export
+taxonomy_definition <- function(code = NULL) {
+  check_nchar(code, 10)
+  pin <- get_pin("definitions")
+  search_in_if(pin, pin[["code"]], code)
+}
+
 #' Check that input is `n` character(s) long
 #'
 #' @param x `<chr>` string

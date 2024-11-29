@@ -1,10 +1,10 @@
 file: changelog.qs
-file_size: 4175
-pin_hash: a31f66067c8d6c9b
+file_size: 3783
+pin_hash: 342e2a8e1df28ba2
 type: qs
 title: NUCC Taxonomy Changelog 2009-2024
 description: Health Care Provider Taxonomy Code Set Changelog 2009-2024
 tags: ~
 urls: ~
-created: 20241129T163133Z
+created: 20241129T201405Z
 api_version: 1
