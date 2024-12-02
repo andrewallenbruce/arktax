@@ -7,7 +7,7 @@
 taxonomy_hierarchy(
   taxonomy_code = NULL,
   taxonomy_level = NULL,
-  taxonomy_level_title = NULL
+  taxonomy_title = NULL
 )
 }
 \arguments{
@@ -17,7 +17,7 @@ alphanumeric code, ten characters in length}
 \item{taxonomy_level}{\verb{<chr>}  Taxonomy level; options are \code{"I. Section"},
 \code{"II. Grouping"}, \code{"III. Classification"} and \code{"IV. Specialization"}}
 
-\item{taxonomy_level_title}{\verb{<chr>}  Taxonomy level title}
+\item{taxonomy_title}{\verb{<chr>}  Taxonomy level title}
 }
 \value{
 \verb{<tibble>} of search results
@@ -32,6 +32,6 @@ taxonomy_hierarchy(taxonomy_code = "103TA0400X")
 
 taxonomy_hierarchy(taxonomy_level = "I. Section")
 
-taxonomy_hierarchy(taxonomy_level_title = "Allopathic & Osteopathic Physicians")
+taxonomy_hierarchy(taxonomy_title = "Allopathic & Osteopathic Physicians")
 
 }

@@ -96,7 +96,7 @@ taxonomy_changelog <- function(taxonomy_code = NULL) {
 #' @param taxonomy_level `<chr>`  Taxonomy level; options are `"I. Section"`,
 #'   `"II. Grouping"`, `"III. Classification"` and `"IV. Specialization"`
 #'
-#' @param taxonomy_level_title `<chr>`  Taxonomy level title
+#' @param taxonomy_title `<chr>`  Taxonomy level title
 #'
 #' @returns `<tibble>` of search results
 #'
@@ -107,7 +107,7 @@ taxonomy_changelog <- function(taxonomy_code = NULL) {
 #'
 #' taxonomy_hierarchy(taxonomy_level = "I. Section")
 #'
-#' taxonomy_hierarchy(taxonomy_level_title = "Allopathic & Osteopathic Physicians")
+#' taxonomy_hierarchy(taxonomy_title = "Allopathic & Osteopathic Physicians")
 #'
 #' @importFrom fuimus search_in_if
 #'
@@ -116,7 +116,7 @@ taxonomy_changelog <- function(taxonomy_code = NULL) {
 #' @export
 taxonomy_hierarchy <- function(taxonomy_code = NULL,
                                taxonomy_level = NULL,
-                               taxonomy_level_title = NULL) {
+                               taxonomy_title = NULL) {
 
   check_nchar(taxonomy_code, 10)
 
@@ -124,7 +124,7 @@ taxonomy_hierarchy <- function(taxonomy_code = NULL,
 
   pin <- search_in_if(pin, pin[["taxonomy_code"]], taxonomy_code)
   pin <- search_in_if(pin, pin[["taxonomy_level"]], taxonomy_level)
-  pin <- search_in_if(pin, pin[["taxonomy_level_title"]], taxonomy_level_title)
+  pin <- search_in_if(pin, pin[["taxonomy_level_title"]], taxonomy_title)
 
   return(pin)
 }
