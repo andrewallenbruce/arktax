@@ -4,10 +4,10 @@
 \alias{taxonomy_hierarchy}
 \title{Taxonomy Hierarchy}
 \usage{
-taxonomy_hierarchy(code = NULL)
+taxonomy_hierarchy(taxonomy_code = NULL)
 }
 \arguments{
-\item{code}{\verb{<chr>}  Health Care Provider Taxonomy code, a unique
+\item{taxonomy_code}{\verb{<chr>}  Health Care Provider Taxonomy code, a unique
 alphanumeric code, ten characters in length}
 }
 \value{
@@ -17,8 +17,8 @@ alphanumeric code, ten characters in length}
 Taxonomy Hierarchy
 }
 \examples{
-taxonomy_hierarchy(code = "101Y00000X")
+taxonomy_hierarchy(taxonomy_code = "101Y00000X")
 
-taxonomy_hierarchy(code = "103TA0400X")
+taxonomy_hierarchy(taxonomy_code = "103TA0400X")
 
 }

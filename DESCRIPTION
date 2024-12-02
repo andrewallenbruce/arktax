@@ -4,7 +4,9 @@ Version: 0.0.1
 Authors@R: 
     person(c("Andrew", "Allen"), "Bruce", , "andrewallenbruce@gmail.com", role = c("aut", "cre", "cph"))
 Maintainer: Andrew Bruce <andrewallenbruce@gmail.com>
-Description: What the package does (one paragraph).
+Description: Provides a programmatic interface to the Health Care Provider
+    Taxonomy Code Set. The package includes functions to retrieve the
+    taxonomy codes, hierarchy, and Medicare specialty crosswalk data.
 License: MIT + file LICENSE
 URL: https://github.com/andrewallenbruce/arktax,
     https://andrewallenbruce.github.io/arktax/

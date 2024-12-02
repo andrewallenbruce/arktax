@@ -67,19 +67,6 @@ sources <- vctrs::vec_rbind(
 # Additional Resources: The American Osteopathic Board of Radiology no longer offers a certificate in this specialty.
 # Note: In medical practice, Diagnostic Ultrasound is part of the scope of training and practice of a Diagnostic Radiologist - see Taxonomy Code 2085R0202X.
 
-sources <- get_pin("sources") |>
-  dplyr::rename(
-    source = type,
-    text = source)
-
-pin_update(
-  sources,
-  "sources",
-  "NUCC Taxonomy Sources 2009-2024",
-  "Health Care Provider Taxonomy Code Set Sources 2009-2024"
-)
-
-
 #----------------------------- UPDATES
 updates <- base |>
   dplyr::select(-sources) |>

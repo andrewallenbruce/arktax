@@ -4,10 +4,10 @@
 \alias{taxonomy_changelog}
 \title{Taxonomy Change Log}
 \usage{
-taxonomy_changelog(code = NULL)
+taxonomy_changelog(taxonomy_code = NULL)
 }
 \arguments{
-\item{code}{\verb{<chr>}  Health Care Provider Taxonomy code, a unique
+\item{taxonomy_code}{\verb{<chr>}  Health Care Provider Taxonomy code, a unique
 alphanumeric code, ten characters in length}
 }
 \value{
@@ -17,8 +17,8 @@ alphanumeric code, ten characters in length}
 Taxonomy Change Log
 }
 \examples{
-taxonomy_changelog(code = "103GC0700X")
+taxonomy_changelog(taxonomy_code = "103GC0700X")
 
-taxonomy_changelog(code = "103G00000X")
+taxonomy_changelog(taxonomy_code = "103G00000X")
 
 }

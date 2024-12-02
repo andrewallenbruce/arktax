@@ -4,14 +4,14 @@
 \alias{taxonomy_raw}
 \title{Raw Taxonomy File}
 \usage{
-taxonomy_raw(year = NULL, version = NULL, code = NULL)
+taxonomy_raw(year = NULL, version = NULL, taxonomy_code = NULL)
 }
 \arguments{
 \item{year}{\verb{<int>} year of source file release; options are \code{2009:2024}}
 
 \item{version}{\verb{<int>} version of source file; options are \code{0} or \code{1}}
 
-\item{code}{\verb{<chr>}  Health Care Provider Taxonomy code, a unique
+\item{taxonomy_code}{\verb{<chr>} Health Care Provider Taxonomy code, a unique
 alphanumeric code, ten characters in length}
 }
 \value{
@@ -21,8 +21,8 @@ alphanumeric code, ten characters in length}
 Raw Taxonomy File
 }
 \examples{
-taxonomy_raw(year = 2024, code = "101Y00000X")
+taxonomy_raw(year = 2024, taxonomy_code = "101Y00000X")
 
-taxonomy_raw(code = "101Y00000X")
+taxonomy_raw(taxonomy_code = "101Y00000X")
 
 }

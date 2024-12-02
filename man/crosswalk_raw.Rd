@@ -4,10 +4,10 @@
 \alias{crosswalk_raw}
 \title{Raw Crosswalk File}
 \usage{
-crosswalk_raw(code = NULL)
+crosswalk_raw(taxonomy_code = NULL)
 }
 \arguments{
-\item{code}{\verb{<chr>}  Health Care Provider Taxonomy code, a unique
+\item{taxonomy_code}{\verb{<chr>}  Health Care Provider Taxonomy code, a unique
 alphanumeric code, ten characters in length}
 }
 \value{
@@ -17,7 +17,7 @@ alphanumeric code, ten characters in length}
 Raw Crosswalk File
 }
 \examples{
-crosswalk_raw(code = "103T00000X")
+crosswalk_raw(taxonomy_code = "103T00000X")
 
 head(crosswalk_raw(), 10)
 

@@ -1,4 +1,4 @@
-file: display.qs
+file: tax_display.qs
 file_size: 11358
 pin_hash: 6657beed09bdcfc0
 type: qs
@@ -6,5 +6,5 @@ title: NUCC Taxonomy Display Names 2009-2024
 description: Health Care Provider Taxonomy Code Set Display Names 2009-2024
 tags: ~
 urls: ~
-created: 20241129T201723Z
+created: 20241202T101342Z
 api_version: 1

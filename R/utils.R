@@ -1,8 +1,8 @@
-#' Check that input is `n` character(s) long
+#' Check that argument `x` is `n` character(s) long
 #'
-#' @param x `<chr>` string
+#' @param x `<chr>` unquoted, string; argument name
 #'
-#' @param n `<int>` number of characters
+#' @param n `<int>` number of characters `x` should be
 #'
 #' @autoglobal
 #'
@@ -11,7 +11,10 @@ check_nchar <- function(x, n) {
 
   if (!is.null(x)) {
 
-    stopifnot(rlang::is_integerish(n), n > 0)
+    stopifnot(
+      rlang::is_integerish(n),
+      n > 0
+      )
 
     arg  <- rlang::caller_arg(x)
     call <- rlang::caller_env()

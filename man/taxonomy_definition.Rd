@@ -4,10 +4,10 @@
 \alias{taxonomy_definition}
 \title{Taxonomy Definitions}
 \usage{
-taxonomy_definition(code = NULL)
+taxonomy_definition(taxonomy_code = NULL)
 }
 \arguments{
-\item{code}{\verb{<chr>}  Health Care Provider Taxonomy code, a unique
+\item{taxonomy_code}{\verb{<chr>}  Health Care Provider Taxonomy code, a unique
 alphanumeric code, ten characters in length}
 }
 \value{
@@ -17,8 +17,8 @@ alphanumeric code, ten characters in length}
 Taxonomy Definitions
 }
 \examples{
-taxonomy_definition(code = "101Y00000X")
+taxonomy_definition(taxonomy_code = "101Y00000X")
 
-taxonomy_definition(code = "103TA0400X")
+taxonomy_definition(taxonomy_code = "103TA0400X")
 
 }

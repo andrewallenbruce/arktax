@@ -4,10 +4,10 @@
 \alias{taxonomy_sources}
 \title{Taxonomy Sources}
 \usage{
-taxonomy_sources(code = NULL)
+taxonomy_sources(taxonomy_code = NULL)
 }
 \arguments{
-\item{code}{\verb{<chr>}  Health Care Provider Taxonomy code, a unique
+\item{taxonomy_code}{\verb{<chr>}  Health Care Provider Taxonomy code, a unique
 alphanumeric code, ten characters in length}
 }
 \value{
@@ -17,8 +17,8 @@ alphanumeric code, ten characters in length}
 Taxonomy Sources
 }
 \examples{
-taxonomy_sources(code = "101Y00000X")
+taxonomy_sources(taxonomy_code = "101Y00000X")
 
-taxonomy_sources(code = "103TA0400X")
+taxonomy_sources(taxonomy_code = "103TA0400X")
 
 }

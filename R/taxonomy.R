@@ -4,15 +4,15 @@
 #'
 #' @param version `<int>` version of source file; options are `0` or `1`
 #'
-#' @param code `<chr>`  Health Care Provider Taxonomy code, a unique
+#' @param taxonomy_code `<chr>` Health Care Provider Taxonomy code, a unique
 #'   alphanumeric code, ten characters in length
 #'
 #' @returns `<tibble>` of search results
 #'
 #' @examples
-#' taxonomy_raw(year = 2024, code = "101Y00000X")
+#' taxonomy_raw(year = 2024, taxonomy_code = "101Y00000X")
 #'
-#' taxonomy_raw(code = "101Y00000X")
+#' taxonomy_raw(taxonomy_code = "101Y00000X")
 #'
 #' @importFrom fuimus search_in_if
 #'
@@ -21,126 +21,133 @@
 #' @export
 taxonomy_raw <- function(year = NULL,
                          version = NULL,
-                         code = NULL) {
-  check_nchar(code, 10)
-  pin <- get_pin("raw")
+                         taxonomy_code = NULL) {
+
+  check_nchar(taxonomy_code, 10)
+
+  pin <- get_pin("tax_raw")
+
   pin <- search_in_if(pin, pin[["year"]], year)
   pin <- search_in_if(pin, pin[["version"]], version)
-  pin <- search_in_if(pin, pin[["code"]], code)
+  pin <- search_in_if(pin, pin[["code"]], taxonomy_code)
+
   return(pin)
 }
 
 #' Taxonomy Sources
 #'
-#' @param code `<chr>`  Health Care Provider Taxonomy code, a unique
+#' @param taxonomy_code `<chr>`  Health Care Provider Taxonomy code, a unique
 #'   alphanumeric code, ten characters in length
 #'
 #' @returns `<tibble>` of search results
 #'
 #' @examples
-#' taxonomy_sources(code = "101Y00000X")
+#' taxonomy_sources(taxonomy_code = "101Y00000X")
 #'
-#' taxonomy_sources(code = "103TA0400X")
+#' taxonomy_sources(taxonomy_code = "103TA0400X")
 #'
 #' @importFrom fuimus search_in_if
 #'
 #' @autoglobal
 #'
 #' @export
-taxonomy_sources <- function(code = NULL) {
-  check_nchar(code, 10)
-  pin <- get_pin("sources")
-  search_in_if(pin, pin[["code"]], code)
+taxonomy_sources <- function(taxonomy_code = NULL) {
+
+  check_nchar(taxonomy_code, 10)
+
+  pin <- get_pin("tax_sources")
+
+  search_in_if(pin, pin[["code"]], taxonomy_code)
 }
 
 #' Taxonomy Change Log
 #'
-#' @param code `<chr>`  Health Care Provider Taxonomy code, a unique
+#' @param taxonomy_code `<chr>`  Health Care Provider Taxonomy code, a unique
 #'   alphanumeric code, ten characters in length
 #'
 #' @returns `<tibble>` of search results
 #'
 #' @examples
-#' taxonomy_changelog(code = "103GC0700X")
+#' taxonomy_changelog(taxonomy_code = "103GC0700X")
 #'
-#' taxonomy_changelog(code = "103G00000X")
+#' taxonomy_changelog(taxonomy_code = "103G00000X")
 #'
 #' @importFrom fuimus search_in_if
 #'
 #' @autoglobal
 #'
 #' @export
-taxonomy_changelog <- function(code = NULL) {
-  check_nchar(code, 10)
-  pin <- get_pin("changelog")
-  search_in_if(pin, pin[["code"]], code)
+taxonomy_changelog <- function(taxonomy_code = NULL) {
+  check_nchar(taxonomy_code, 10)
+  pin <- get_pin("tax_changelog")
+  search_in_if(pin, pin[["code"]], taxonomy_code)
 }
 
 #' Taxonomy Hierarchy
 #'
-#' @param code `<chr>`  Health Care Provider Taxonomy code, a unique
+#' @param taxonomy_code `<chr>`  Health Care Provider Taxonomy code, a unique
 #'   alphanumeric code, ten characters in length
 #'
 #' @returns `<tibble>` of search results
 #'
 #' @examples
-#' taxonomy_hierarchy(code = "101Y00000X")
+#' taxonomy_hierarchy(taxonomy_code = "101Y00000X")
 #'
-#' taxonomy_hierarchy(code = "103TA0400X")
+#' taxonomy_hierarchy(taxonomy_code = "103TA0400X")
 #'
 #' @importFrom fuimus search_in_if
 #'
 #' @autoglobal
 #'
 #' @export
-taxonomy_hierarchy <- function(code = NULL) {
-  check_nchar(code, 10)
-  pin <- get_pin("hierarchy")
-  search_in_if(pin, pin[["code"]], code)
+taxonomy_hierarchy <- function(taxonomy_code = NULL) {
+  check_nchar(taxonomy_code, 10)
+  pin <- get_pin("tax_hierarchy")
+  search_in_if(pin, pin[["code"]], taxonomy_code)
 }
 
 #' Taxonomy Display Names
 #'
-#' @param code `<chr>`  Health Care Provider Taxonomy code, a unique
+#' @param taxonomy_code `<chr>`  Health Care Provider Taxonomy code, a unique
 #'   alphanumeric code, ten characters in length
 #'
 #' @returns `<tibble>` of search results
 #'
 #' @examples
-#' taxonomy_display(code = "101Y00000X")
+#' taxonomy_display(taxonomy_code = "101Y00000X")
 #'
-#' taxonomy_display(code = "103TA0400X")
+#' taxonomy_display(taxonomy_code = "103TA0400X")
 #'
 #' @importFrom fuimus search_in_if
 #'
 #' @autoglobal
 #'
 #' @export
-taxonomy_display <- function(code = NULL) {
-  check_nchar(code, 10)
-  pin <- get_pin("display")
-  search_in_if(pin, pin[["code"]], code)
+taxonomy_display <- function(taxonomy_code = NULL) {
+  check_nchar(taxonomy_code, 10)
+  pin <- get_pin("tax_display")
+  search_in_if(pin, pin[["code"]], taxonomy_code)
 }
 
 #' Taxonomy Definitions
 #'
-#' @param code `<chr>`  Health Care Provider Taxonomy code, a unique
+#' @param taxonomy_code `<chr>`  Health Care Provider Taxonomy code, a unique
 #'   alphanumeric code, ten characters in length
 #'
 #' @returns `<tibble>` of search results
 #'
 #' @examples
-#' taxonomy_definition(code = "101Y00000X")
+#' taxonomy_definition(taxonomy_code = "101Y00000X")
 #'
-#' taxonomy_definition(code = "103TA0400X")
+#' taxonomy_definition(taxonomy_code = "103TA0400X")
 #'
 #' @importFrom fuimus search_in_if
 #'
 #' @autoglobal
 #'
 #' @export
-taxonomy_definition <- function(code = NULL) {
-  check_nchar(code, 10)
-  pin <- get_pin("definitions")
-  search_in_if(pin, pin[["code"]], code)
+taxonomy_definition <- function(taxonomy_code = NULL) {
+  check_nchar(taxonomy_code, 10)
+  pin <- get_pin("tax_definitions")
+  search_in_if(pin, pin[["code"]], taxonomy_code)
 }
