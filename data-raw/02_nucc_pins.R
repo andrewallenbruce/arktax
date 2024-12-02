@@ -75,9 +75,7 @@ readr::read_csv(
   name_repair = janitor::make_clean_names)
 
 deactivated <- ark_spt |>
-  dplyr::filter(
-    codex::not_na(deactivated)
-    ) |>
+  dplyr::filter(codex::not_na(deactivated)) |>
   dplyr::pull(code)
 
 ark_spt
@@ -150,19 +148,12 @@ ark_long <- ark_long |>
   tidyr::fill(nlevels, nyears)
 
 
-hierarchy <- get_pin("ark_long") |>
+hierarchy <- get_pin("tax_hierarchy") |>
   dplyr::mutate(id = dplyr::consecutive_id(level), .by = code) |>
   dplyr::filter(id != dplyr::lag(id, default = 0)) |>
   dplyr::select(-id)
 
-pin_update(
-  hierarchy,
-  name = "hierarchy",
-  title = "NUCC Taxonomy Gierarchy",
-  description = "Health Care Provider Taxonomy Code Set Archive 2009-2024 (Hierarchy)"
-)
-
-get_pin("ark_long") |>
+get_pin("tax_hierarchy") |>
   dplyr::count(code, level, sort = TRUE) |>
   dplyr::filter(n > 1) |>
   dplyr::pull(code)

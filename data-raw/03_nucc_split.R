@@ -189,7 +189,7 @@ pin_update(
 #--------- Comparing raw dates to the updates
 updates |> dplyr::filter(type == "modified")
 
-arktax::retrieve_ark(which = "wide") |>
+arktax::taxonomy_raw() |>
   dplyr::select(code, modified) |>
   dplyr::filter(codex::not_na(modified)) |>
   dplyr::distinct() |>
@@ -197,7 +197,7 @@ arktax::retrieve_ark(which = "wide") |>
 
 updates |> dplyr::filter(type == "effective")
 
-arktax::retrieve_ark(which = "wide") |>
+arktax::taxonomy_raw() |>
   dplyr::select(code, effective) |>
   dplyr::filter(codex::not_na(effective)) |>
   dplyr::distinct()
@@ -206,35 +206,7 @@ updates |>
   dplyr::filter(type == "deactivated") |>
   print(n = 30)
 
-arktax::retrieve_ark(which = "wide") |>
+arktax::taxonomy_raw() |>
   dplyr::select(code, deactivated) |>
   dplyr::filter(codex::not_na(deactivated)) |>
   dplyr::distinct()
-
-
-#-------DISPLAY NAME
-display <- arktax::taxonomy_raw(year = 2024, version = 1) |>
-  dplyr::select(code, display_name)
-
-pin_update(
-  display,
-  "display",
-  "NUCC Taxonomy Display Names 2009-2024",
-  "Health Care Provider Taxonomy Code Set Display Names 2009-2024"
-)
-
-#-------DEFINITION
-definitions <- arktax::taxonomy_raw(year = 2024, version = 1) |>
-  dplyr::select(code, definition) |>
-  dplyr::mutate(
-    definition = dplyr::if_else(
-      codex::na(definition),
-      "None",
-      definition))
-
-pin_update(
-  definitions,
-  "definitions",
-  "NUCC Taxonomy Definitions 2009-2024",
-  "Health Care Provider Taxonomy Code Set Definitions 2009-2024"
-)

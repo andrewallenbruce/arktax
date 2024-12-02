@@ -1,10 +1,10 @@
-file: tax_definitions.qs
-file_size: 75021
-pin_hash: 79f378e9d0fd77bd
+file: tax_definition.qs
+file_size: 75008
+pin_hash: 5bf90ad3e935769f
 type: qs
 title: NUCC Taxonomy Definitions 2009-2024
 description: Health Care Provider Taxonomy Code Set Definitions 2009-2024
 tags: ~
 urls: ~
-created: 20241202T101218Z
+created: 20241202T165819Z
 api_version: 1

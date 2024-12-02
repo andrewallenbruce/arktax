@@ -4,11 +4,20 @@
 \alias{taxonomy_hierarchy}
 \title{Taxonomy Hierarchy}
 \usage{
-taxonomy_hierarchy(taxonomy_code = NULL)
+taxonomy_hierarchy(
+  taxonomy_code = NULL,
+  taxonomy_level = NULL,
+  taxonomy_level_title = NULL
+)
 }
 \arguments{
 \item{taxonomy_code}{\verb{<chr>}  Health Care Provider Taxonomy code, a unique
 alphanumeric code, ten characters in length}
+
+\item{taxonomy_level}{\verb{<chr>}  Taxonomy level; options are \code{"I. Section"},
+\code{"II. Grouping"}, \code{"III. Classification"} and \code{"IV. Specialization"}}
+
+\item{taxonomy_level_title}{\verb{<chr>}  Taxonomy level title}
 }
 \value{
 \verb{<tibble>} of search results
@@ -20,5 +29,9 @@ Taxonomy Hierarchy
 taxonomy_hierarchy(taxonomy_code = "101Y00000X")
 
 taxonomy_hierarchy(taxonomy_code = "103TA0400X")
+
+taxonomy_hierarchy(taxonomy_level = "I. Section")
+
+taxonomy_hierarchy(taxonomy_level_title = "Allopathic & Osteopathic Physicians")
 
 }
