@@ -19,3 +19,9 @@ two characters in length}
 \description{
 Medicare Specialty Crosswalk Footnotes
 }
+\examples{
+crosswalk_footnotes(taxonomy_code = "251E00000X")
+
+crosswalk_footnotes(specialty_code = "A0")
+
+}

@@ -73,7 +73,7 @@ crosswalk_taxonomy <- function(taxonomy_code = NULL,
 #' @examples
 #' crosswalk_footnotes(taxonomy_code = "251E00000X")
 #'
-#' crosswalk_footnotes(specialty_code = "A0)
+#' crosswalk_footnotes(specialty_code = "A0")
 #'
 #' @importFrom fuimus search_in_if
 #'
@@ -81,7 +81,7 @@ crosswalk_taxonomy <- function(taxonomy_code = NULL,
 #'
 #' @export
 crosswalk_footnotes <- function(taxonomy_code = NULL,
-                               specialty_code = NULL) {
+                                specialty_code = NULL) {
 
   check_nchar(taxonomy_code, 10)
   check_nchar(specialty_code, 2)
