@@ -14,6 +14,8 @@
 #'
 #' taxonomy_raw(taxonomy_code = "101Y00000X")
 #'
+#' taxonomy_raw(taxonomy_code = c("101YM0800X", "101YP2500X")) |> print(n = 100)
+#'
 #' @importFrom fuimus search_in_if
 #'
 #' @autoglobal
@@ -78,8 +80,11 @@ taxonomy_sources <- function(taxonomy_code = NULL) {
 #'
 #' @export
 taxonomy_changelog <- function(taxonomy_code = NULL) {
+
   check_nchar(taxonomy_code, 10)
+
   pin <- get_pin("tax_changelog")
+
   search_in_if(pin, pin[["code"]], taxonomy_code)
 }
 
@@ -101,8 +106,11 @@ taxonomy_changelog <- function(taxonomy_code = NULL) {
 #'
 #' @export
 taxonomy_hierarchy <- function(taxonomy_code = NULL) {
+
   check_nchar(taxonomy_code, 10)
+
   pin <- get_pin("tax_hierarchy")
+
   search_in_if(pin, pin[["code"]], taxonomy_code)
 }
 
@@ -124,8 +132,11 @@ taxonomy_hierarchy <- function(taxonomy_code = NULL) {
 #'
 #' @export
 taxonomy_display <- function(taxonomy_code = NULL) {
+
   check_nchar(taxonomy_code, 10)
+
   pin <- get_pin("tax_display")
+
   search_in_if(pin, pin[["code"]], taxonomy_code)
 }
 
@@ -147,7 +158,10 @@ taxonomy_display <- function(taxonomy_code = NULL) {
 #'
 #' @export
 taxonomy_definition <- function(taxonomy_code = NULL) {
+
   check_nchar(taxonomy_code, 10)
+
   pin <- get_pin("tax_definitions")
+
   search_in_if(pin, pin[["code"]], taxonomy_code)
 }

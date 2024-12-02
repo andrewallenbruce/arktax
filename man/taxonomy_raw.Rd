@@ -25,4 +25,6 @@ taxonomy_raw(year = 2024, taxonomy_code = "101Y00000X")
 
 taxonomy_raw(taxonomy_code = "101Y00000X")
 
+taxonomy_raw(taxonomy_code = c("101YM0800X", "101YP2500X")) |> print(n = 100)
+
 }
