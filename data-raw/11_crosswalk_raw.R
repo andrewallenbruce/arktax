@@ -21,7 +21,13 @@ walk <- xwalk |>
     specialty_type = stringr::str_remove(specialty_type, "\\[.*\\]"),
     specialty_code = stringr::str_remove(specialty_code, "\\[.*\\]"))
 
-footnotes <- arktax::get_pin("cross_notes")
+footnotes <- footnotes <- dplyr::tibble(
+  note = as.character(1:14),
+  note_description = readr::read_lines(
+    here::here(
+      "data-raw",
+      "raw",
+      "taxonomy_notes.txt")))
 
 raw <- walk |>
   dplyr::left_join(footnotes, by = dplyr::join_by(type_note == note)) |>
@@ -45,25 +51,3 @@ pin_update(
   "Medicare Taxonomy Crosswalk 2024",
   "Medicare Provider and Supplier Taxonomy Crosswalk 2024"
 )
-
-#----------specialty
-specialty <- walk |>
-  dplyr::select(
-    .id,
-    specialty_code,
-    specialty_type,
-    type_note,
-    code_note) |>
-  dplyr::left_join(footnotes, by = dplyr::join_by(type_note == note)) |>
-  dplyr::left_join(footnotes, by = dplyr::join_by(code_note == note)) |>
-  fuimus::combine(name = note, columns = c("type_note", "code_note"), sep = ", ") |>
-  fuimus::combine(name = note_description, columns = c("note_description.x", "note_description.y"), sep = " ")
-
-specialty |>
-  # dplyr::filter(codex::not_na(note) | codex::not_na(note_description)) |>
-  dplyr::mutate(.id = as.character(.id)) |>
-  tidyr::nest(data = .id) |>
-  dplyr::mutate(.id = purrr::map_chr(data, function(x) glue::glue("{codex::delist(x)}") |> glue::glue_collapse(sep = ", ")),
-                data = NULL) |>
-  tidyr::separate_longer_delim(cols = specialty_type, delim = stringr::fixed("/")) |>
-  dplyr::mutate(specialty_type = stringr::str_squish(specialty_type))
