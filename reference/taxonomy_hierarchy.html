@@ -48,7 +48,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">taxonomy_hierarchy</span><span class="op">(</span></span>
 <span>  taxonomy_code <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  taxonomy_level <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  taxonomy_level_title <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  taxonomy_title <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -66,7 +66,7 @@ alphanumeric code, ten characters in length</p></dd>
 <code>"II. Grouping"</code>, <code>"III. Classification"</code> and <code>"IV. Specialization"</code></p></dd>
 
 
-<dt id="arg-taxonomy-level-title">taxonomy_level_title<a class="anchor" aria-label="anchor" href="#arg-taxonomy-level-title"></a></dt>
+<dt id="arg-taxonomy-title">taxonomy_title<a class="anchor" aria-label="anchor" href="#arg-taxonomy-title"></a></dt>
 <dd><p><code>&lt;chr&gt;</code>  Taxonomy level title</p></dd>
 
 </dl></div>
@@ -110,7 +110,7 @@ alphanumeric code, ten characters in length</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 103G00000X    I. Section     Individual          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 864 more rows</span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">taxonomy_hierarchy</span><span class="op">(</span>taxonomy_level_title <span class="op">=</span> <span class="st">"Allopathic &amp; Osteopathic Physicians"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">taxonomy_hierarchy</span><span class="op">(</span>taxonomy_title <span class="op">=</span> <span class="st">"Allopathic &amp; Osteopathic Physicians"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 231 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    taxonomy_code taxonomy_level taxonomy_level_title               </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                              </span>
