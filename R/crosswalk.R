@@ -25,3 +25,37 @@ crosswalk_raw <- function(taxonomy_code = NULL) {
 
   return(pin)
 }
+
+#' Taxonomy - Medicare Specialty Crosswalk
+#'
+#' @param taxonomy_code `<chr>`  Health Care Provider Taxonomy code, a unique
+#'   alphanumeric code, ten characters in length
+#'
+#' @param specialty_code `<chr>`  Medicare Specialty Code, an alphanumeric code,
+#'   two characters in length
+#'
+#' @returns `<tibble>` of search results
+#'
+#' @examples
+#' crosswalk_taxonomy(taxonomy_code = "103T00000X")
+#'
+#' crosswalk_taxonomy(taxonomy_code = c("101YM0800X", "101YP2500X"))
+#'
+#' @importFrom fuimus search_in_if
+#'
+#' @autoglobal
+#'
+#' @export
+crosswalk_taxonomy <- function(taxonomy_code = NULL,
+                               specialty_code = NULL) {
+
+  check_nchar(taxonomy_code, 10)
+  check_nchar(specialty_code, 2)
+
+  pin <- get_pin("cross_tax")
+
+  pin <- search_in_if(pin, pin[["taxonomy_code"]], taxonomy_code)
+  pin <- search_in_if(pin, pin[["specialty_code"]], specialty_code)
+
+  return(pin)
+}

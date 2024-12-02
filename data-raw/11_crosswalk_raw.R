@@ -21,18 +21,7 @@ walk <- xwalk |>
     specialty_type = stringr::str_remove(specialty_type, "\\[.*\\]"),
     specialty_code = stringr::str_remove(specialty_code, "\\[.*\\]"))
 
-walk |>
-  dplyr::filter(codex::not_na(type_note))
-  dplyr::filter(codex::not_na(code_note))
-
-### Medicare Footnotes
-footnotes <- dplyr::tibble(
-  note = as.character(1:14),
-  note_description = readr::read_lines(
-    here::here(
-      "data-raw",
-      "raw",
-      "taxonomy_notes.txt")))
+footnotes <- arktax::get_pin("cross_notes")
 
 raw <- walk |>
   dplyr::left_join(footnotes, by = dplyr::join_by(type_note == note)) |>
@@ -56,32 +45,6 @@ pin_update(
   "Medicare Taxonomy Crosswalk 2024",
   "Medicare Provider and Supplier Taxonomy Crosswalk 2024"
 )
-
-#----------taxonomy
-taxonomy <- walk |>
-  dplyr::select(.id, taxonomy_code, taxonomy_type) |>
-  tidyr::separate_longer_delim(cols = taxonomy_type, delim = stringr::regex("[\\/|,]")) |>
-  dplyr::mutate(taxonomy_type = dplyr::if_else(codex::sf_detect(taxonomy_type, "Urban Indian Health \\(I"), "Urban Indian Health [ITU] Pharmacy", stringr::str_squish(taxonomy_type))) |>
-  dplyr::filter(codex::sf_ndetect(taxonomy_type, "^T$|U\\)\\sPharmacy")) |>
-  dplyr::mutate(.group = dplyr::row_number(),
-                .by = c(taxonomy_code, .id),
-                .after = .id) |>
-  tidyr::pivot_wider(
-    names_from = .group,
-    values_from = taxonomy_type,
-    names_prefix = "tax")
-
-taxonomy
-
-taxonomy |>
-  hacksaw::count_split(
-    tax1,
-    tax2,
-    tax3,
-    tax4,
-    tax5,
-    tax6
-  )
 
 #----------specialty
 specialty <- walk |>

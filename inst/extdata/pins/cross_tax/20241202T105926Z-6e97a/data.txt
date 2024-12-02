@@ -1,0 +1,10 @@
+file: cross_tax.qs
+file_size: 10153
+pin_hash: 6e97a8dc00f3dd7b
+type: qs
+title: Medicare Taxonomy Crosswalk Taxonomy Codes 2024
+description: Medicare Provider and Supplier Taxonomy Crosswalk Taxonomy Codes 2024
+tags: ~
+urls: ~
+created: 20241202T105926Z
+api_version: 1

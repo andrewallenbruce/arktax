@@ -1,7 +1,9 @@
+cross_notes:
+- cross_notes/20241202T103456Z-f72f3/
 cross_raw:
 - cross_raw/20241129T223149Z-59f58/
-raw:
-- raw/20241129T184741Z-05252/
+cross_tax:
+- cross_tax/20241202T105926Z-6e97a/
 tax_changelog:
 - tax_changelog/20241202T101138Z-342e2/
 tax_definitions:
