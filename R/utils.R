@@ -28,3 +28,16 @@ check_nchar <- function(x, n) {
     stringfish::sf_toupper(x)
   }
 }
+
+#' Read from a URL
+#'
+#' @param url `<chr>` url
+#'
+#' @autoglobal
+#'
+#' @keywords internal
+#'
+#' @export
+read_url <- function(url) {
+  qs::qread_url(url)
+  }

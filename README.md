@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# **`arktax`**
+# arktax
 
 <!-- badges: start -->
 
@@ -15,12 +15,11 @@ size](https://img.shields.io/github/languages/code-size/andrewallenbruce/arktax.
 commit](https://img.shields.io/github/last-commit/andrewallenbruce/arktax.svg)](https://github.com/andrewallenbruce/arktax/commits/master)
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://choosealicense.com/licenses/mit/)
-
 <!-- badges: end -->
 
-## Installation
+## :package: Installation
 
-You can install the development version of **`arktax`** from
+You can install the development version of **arktax** from
 [GitHub](https://github.com/) with:
 
 ``` r

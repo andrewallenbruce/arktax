@@ -16,10 +16,10 @@ Imports:
     fs,
     fuimus,
     pins,
+    qs,
     rlang,
     stringfish
 Suggests:
-    qs,
     roxyglobals,
     testthat (>= 3.0.0)
 Remotes: 
