@@ -10,8 +10,6 @@
 #'
 #' head(crosswalk_raw(), 10)
 #'
-#' @importFrom fuimus search_in_if
-#'
 #' @autoglobal
 #'
 #' @export
@@ -21,7 +19,7 @@ crosswalk_raw <- function(taxonomy_code = NULL) {
 
   pin <- get_pin("cross_raw")
 
-  pin <- search_in_if(pin, pin[["taxonomy_code"]], taxonomy_code)
+  pin <- search_in(pin, pin[["taxonomy_code"]], taxonomy_code)
 
   return(pin)
 }
@@ -41,8 +39,6 @@ crosswalk_raw <- function(taxonomy_code = NULL) {
 #'
 #' crosswalk_taxonomy(taxonomy_code = c("101YM0800X", "101YP2500X"))
 #'
-#' @importFrom fuimus search_in_if
-#'
 #' @autoglobal
 #'
 #' @export
@@ -54,8 +50,8 @@ crosswalk_taxonomy <- function(taxonomy_code = NULL,
 
   pin <- get_pin("cross_tax")
 
-  pin <- search_in_if(pin, pin[["taxonomy_code"]], taxonomy_code)
-  pin <- search_in_if(pin, pin[["specialty_code"]], specialty_code)
+  pin <- search_in(pin, pin[["taxonomy_code"]], taxonomy_code)
+  pin <- search_in(pin, pin[["specialty_code"]], specialty_code)
 
   return(pin)
 }
@@ -75,8 +71,6 @@ crosswalk_taxonomy <- function(taxonomy_code = NULL,
 #'
 #' crosswalk_footnotes(specialty_code = "A0")
 #'
-#' @importFrom fuimus search_in_if
-#'
 #' @autoglobal
 #'
 #' @export
@@ -88,8 +82,8 @@ crosswalk_footnotes <- function(taxonomy_code = NULL,
 
   pin <- get_pin("cross_notes")
 
-  pin <- search_in_if(pin, pin[["taxonomy_code"]], taxonomy_code)
-  pin <- search_in_if(pin, pin[["specialty_code"]], specialty_code)
+  pin <- search_in(pin, pin[["taxonomy_code"]], taxonomy_code)
+  pin <- search_in(pin, pin[["specialty_code"]], specialty_code)
 
   return(pin)
 }

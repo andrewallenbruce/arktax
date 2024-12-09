@@ -2,11 +2,21 @@ url: https://andrewallenbruce.github.io/arktax/
 
 template:
   bootstrap: 5
+  theme: tango
   light-switch: true
   bslib:
     base_font: {google: "Roboto"}
     heading_font: {google: "Roboto Slab"}
-    code_font: {google: "Source Code Pro"}
+    code_font: "Hack, mono"
+  includes:
+    in_header: <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hack-font@3/build/web/hack-subset.css">
+
+home:
+  title: arktax • NUCC Provider Taxonomy Codesets
+  description: >
+    Programmatic interface to the NUCC Health Care Provider Taxonomy Code Set,
+    including the raw codesets from 2009 to present, various different forms of
+    the data, and the Medicare specialty-to-taxonomy crosswalk dataset.
 
 navbar:
   structure:

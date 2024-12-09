@@ -9,12 +9,8 @@
 #' @noRd
 check_nchar <- function(x, n) {
 
-  if (!is.null(x)) {
-
-    stopifnot(
-      rlang::is_integerish(n),
-      n > 0
-      )
+  if (not_null(x)) {
+    stopifnot(rlang::is_integerish(n), n > 0)
 
     arg  <- rlang::caller_arg(x)
     call <- rlang::caller_env()
@@ -38,6 +34,26 @@ check_nchar <- function(x, n) {
 #' @keywords internal
 #'
 #' @export
-read_url <- function(url) {
-  qs::qread_url(url)
-  }
+read_url <- \(url) qs::qread_url(url)
+
+#' Is `x` `NULL`?
+#'
+#' @param x vector
+#'
+#' @returns `<lgl>` `TRUE` if `x` is `NULL`, `FALSE` otherwise
+#'
+#' @autoglobal
+#'
+#' @noRd
+null <- \(x) is.null(x)
+
+#' Is `x` not `NULL`?
+#'
+#' @param x vector
+#'
+#' @returns `<lgl>` `FALSE` if `x` is `NULL`, `TRUE` otherwise
+#'
+#' @autoglobal
+#'
+#' @noRd
+not_null <- \(x) !is.null(x)

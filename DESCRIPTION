@@ -1,12 +1,10 @@
 Package: arktax
-Title: Archive: NUCC Taxonomy Codesets, 2009 - 2024
+Title: NUCC Provider Taxonomy Codesets
 Version: 0.0.1
 Authors@R: 
     person(c("Andrew", "Allen"), "Bruce", , "andrewallenbruce@gmail.com", role = c("aut", "cre", "cph"))
 Maintainer: Andrew Bruce <andrewallenbruce@gmail.com>
-Description: Provides a programmatic interface to the Health Care Provider
-    Taxonomy Code Set. The package includes functions to retrieve the
-    taxonomy codes, hierarchy, and Medicare specialty crosswalk data.
+Description: Programmatic interface to the NUCC Health Care Provider Taxonomy Code Set, including the raw codesets from 2009 to present, various different forms of the data, and the Medicare specialty-to-taxonomy crosswalk dataset.
 License: MIT + file LICENSE
 URL: https://github.com/andrewallenbruce/arktax,
     https://andrewallenbruce.github.io/arktax/
