@@ -16,12 +16,10 @@
 crosswalk_raw <- function(taxonomy_code = NULL) {
 
   check_nchar(taxonomy_code, 10)
+  x <- get_pin("cross_raw")
+  x <- search_in(x, "taxonomy_code", taxonomy_code)
 
-  pin <- get_pin("cross_raw")
-
-  pin <- search_in(pin, pin[["taxonomy_code"]], taxonomy_code)
-
-  return(pin)
+  return(x)
 }
 
 #' Taxonomy - Medicare Specialty Crosswalk
@@ -48,12 +46,11 @@ crosswalk_taxonomy <- function(taxonomy_code = NULL,
   check_nchar(taxonomy_code, 10)
   check_nchar(specialty_code, 2)
 
-  pin <- get_pin("cross_tax")
+  x <- get_pin("cross_tax")
+  x <- search_in(x, "taxonomy_code", taxonomy_code)
+  x <- search_in(x, "specialty_code", specialty_code)
 
-  pin <- search_in(pin, pin[["taxonomy_code"]], taxonomy_code)
-  pin <- search_in(pin, pin[["specialty_code"]], specialty_code)
-
-  return(pin)
+  return(x)
 }
 
 #' Medicare Specialty Crosswalk Footnotes
@@ -80,10 +77,9 @@ crosswalk_footnotes <- function(taxonomy_code = NULL,
   check_nchar(taxonomy_code, 10)
   check_nchar(specialty_code, 2)
 
-  pin <- get_pin("cross_notes")
+  x <- get_pin("cross_notes")
+  x <- search_in(x, "taxonomy_code", taxonomy_code)
+  x <- search_in(x, "specialty_code", specialty_code)
 
-  pin <- search_in(pin, pin[["taxonomy_code"]], taxonomy_code)
-  pin <- search_in(pin, pin[["specialty_code"]], specialty_code)
-
-  return(pin)
+  return(x)
 }

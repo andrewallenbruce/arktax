@@ -21,6 +21,8 @@ alphanumeric code, ten characters in length}
 Raw Taxonomy File
 }
 \examples{
+taxonomy_raw(taxonomy_code = "207ZB0001X")
+
 taxonomy_raw(year = 2024, taxonomy_code = "101Y00000X")
 
 taxonomy_raw(taxonomy_code = "101Y00000X")
