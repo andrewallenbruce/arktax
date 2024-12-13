@@ -8,6 +8,9 @@ template:
     base_font: {google: "Roboto"}
     heading_font: {google: "Roboto Slab"}
     code_font: {google: "JetBrains Mono"}
+  includes:
+    after_body: >
+      <script data-goatcounter="https://andrewallenbruce.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
 home:
   title: arktax • NUCC Provider Taxonomy Codesets
@@ -55,3 +58,17 @@ navbar:
       icon: fab fa-github fa-lg
       href: https://github.com/andrewallenbruce/arktax/
       aria-label: GitHub
+
+reference:
+
+- title: Taxonomy
+  desc: >
+    NUCC Health Care Provider Taxonomy Code Set.
+  contents:
+  - starts_with("taxonomy")
+
+- title: Crosswalk
+  desc: >
+    Medicare Provider and Supplier Taxonomy Crosswalk.
+  contents:
+  - starts_with("crosswalk")
