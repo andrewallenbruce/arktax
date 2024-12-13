@@ -1,6 +1,6 @@
 Package: arktax
 Title: NUCC Provider Taxonomy Codesets
-Version: 0.0.1.9000
+Version: 0.0.1.9001
 Authors@R: 
     person(c("Andrew", "Allen"), "Bruce", , "andrewallenbruce@gmail.com", role = c("aut", "cre", "cph"))
 Maintainer: Andrew Bruce <andrewallenbruce@gmail.com>
@@ -10,18 +10,20 @@ URL: https://github.com/andrewallenbruce/arktax,
     https://andrewallenbruce.github.io/arktax/
 BugReports: https://github.com/andrewallenbruce/arktax/issues
 Imports: 
+    cheapr,
     cli,
+    collapse,
     fs,
-    fuimus,
+    kit,
     pins,
     qs,
     rlang,
-    stringfish
+    stringfish,
+    stringi,
+    vctrs
 Suggests:
     roxyglobals,
     testthat (>= 3.0.0)
-Remotes: 
-    andrewallenbruce/fuimus
 Config/roxyglobals/filename: generated-globals.R
 Config/roxyglobals/unique: TRUE
 Config/testthat/edition: 3

@@ -15,7 +15,7 @@ check_nchar <- function(x, n) {
     arg  <- rlang::caller_arg(x)
     call <- rlang::caller_env()
 
-    if (any(stringfish::sf_nchar(x) != n, na.rm = TRUE)) {
+    if (any(sf_chars(x) != n, na.rm = TRUE)) {
       cli::cli_abort(
         "{.arg {arg}} must be {.val {n}} character{?s} long.",
         arg = arg,
@@ -35,25 +35,3 @@ check_nchar <- function(x, n) {
 #'
 #' @export
 read_url <- \(url) qs::qread_url(url)
-
-#' Is `x` `NULL`?
-#'
-#' @param x vector
-#'
-#' @returns `<lgl>` `TRUE` if `x` is `NULL`, `FALSE` otherwise
-#'
-#' @autoglobal
-#'
-#' @noRd
-null <- \(x) is.null(x)
-
-#' Is `x` not `NULL`?
-#'
-#' @param x vector
-#'
-#' @returns `<lgl>` `FALSE` if `x` is `NULL`, `TRUE` otherwise
-#'
-#' @autoglobal
-#'
-#' @noRd
-not_null <- \(x) !is.null(x)
