@@ -18,7 +18,7 @@ Imports:
     collapse (>= 2.0.18),
     fs,
     kit (>= 0.0.19),
-    pins,
+    pins (>= 1.4.0),
     qs,
     rlang,
     stringfish (>= 0.16.0),
