@@ -1,5 +1,10 @@
 <!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
 
+# arktax 0.0.1.9005 (2024-12-26)
+
+* update standalone-helpers
+
+
 # arktax 0.0.1.9004 (2024-12-16)
 
 * updated standalone-helpers
