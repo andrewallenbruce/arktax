@@ -1,44 +1,47 @@
-# "https://www.nucc.org/index.php/code-sets-mainmenu-41/provider-taxonomy-mainmenu-40/csv-mainmenu-57"
+nucc_url_prefix <- function(x) glue::glue("https://www.nucc.org/images/stories/CSV/{x}")
+nucc_url_info   <- "https://www.nucc.org/index.php/code-sets-mainmenu-41/provider-taxonomy-mainmenu-40/csv-mainmenu-57"
+nucc_html_path  <- here::here("data-raw/raw/nucc_html.txt")
 
-urls <- paste0("https://www.nucc.org",
-               paste0("https://www.nucc.org",
-                      rvest::session("https://www.nucc.org") |>
-                        rvest::session_follow_link("Code Sets") |>
-                        rvest::session_follow_link("Taxonomy") |>
-                        rvest::session_follow_link("CSV") |>
-                        rvest::html_elements("a") |>
-                        rvest::html_attr("href") |>
-                        stringr::str_subset("taxonomy") |>
-                        stringr::str_subset("csv")) |>
-                 rvest::read_html() |>
-                 rvest::html_elements("a") |>
-                 rvest::html_attr("href") |>
-                 stringr::str_subset("nucc_taxonomy"))
+# Download NUCC taxonomy HTML page
+xml2::download_html(url = nucc_url, file = nucc_html_path)
 
-infotable <- readLines(paste0(here::here(), "/data-raw/raw/nucc_csv_titles_dates.txt")) |>
-  stringr::str_split("/CSV", simplify = TRUE) |>
-  as.data.frame() |>
-  dplyr::select(V2) |>
-  dplyr::mutate(
-    V2 = stringr::str_remove(V2, '/') |>
-      stringr::str_remove('"') |>
-      stringr::str_replace('>', " ") |>
-      stringr::str_remove("</a></li>") |>
-      stringr::str_remove(",")) |>
-  tidyr::separate_wider_regex(
-    V2,
-    c(filename = "nucc_taxonomy_[0-9]{2,3}.csv",
-      ' Version ',
-      version = "[0-9]{1,2}[.][0-9]{1}",
-      " ",
-      release_date = "[0-9][/][0-9][/][0-9]{2}")) |>
-  dplyr::mutate(
-    release_date = readr::parse_date(release_date, format = "%m/%d/%y"),
-    file_url = urls)
+# Read NUCC taxonomy HTML
+nucc_html <- brio::read_lines(nucc_html_path)
 
-fs::dir_create(glue::glue("{here::here()}/posts/taxonomy/data/csvs"))
+# Extract NUCC csv file information into list
+nucc_txt <- nucc_html[stringr::str_which(nucc_html, "Version")] |>
+  stringr::str_remove_all("[\"']") |>
+  stringr::str_remove_all("<li><a href=/images/stories/CSV/|</a></li>") |>
+  stringr::str_replace(">" , " ") |>
+  stringr::str_remove(",") |>
+  stringr::str_split(" ") |>
+  purrr::list_transpose() |>
+  rlang::set_names(c("file_name", "VERSION_txt", "version", "release_date"))
 
+# List -> tibble, cleanse, and add download URL
+nucc_info <- fastplyr::new_tbl(
+  file_name    = nucc_txt$file_name,
+  version      = nucc_txt$version,
+  release_date = readr::parse_date(nucc_txt$release_date, format = "%m/%d/%y"),
+  download_url = nucc_url_prefix(nucc_txt$file_name)) |>
+  collapse::mtt(
+    major      = as.integer(stringr::str_extract(version, "^.*(?=[.])")),
+    minor      = as.integer(stringr::str_extract(version, "(?<=[.]).*$")),
+    version    = as.double(version))
+
+# Define csv directory path
+csv_dir <- here::here("data-raw/raw/csvs/")
+
+# Create csv directory if it doesn't exist
+if (!fs::dir_exists(csv_dir)) {
+  fs::dir_create(csv_dir)
+}
+
+# Create vector of destination file paths
+dest_files <- glue::glue("{csv_dir}/{nucc_info$file_name}")
+
+# Download NUCC taxonomy csv files
 curl::multi_download(
-  urls = infotable$file_url,
-  destfile = glue::glue("{here::here()}/posts/taxonomy/data/csvs/{infotable$filename}"),
-  resume = TRUE)
+  urls     = nucc_info$download_url,
+  destfile = dest_files,
+  resume   = TRUE)

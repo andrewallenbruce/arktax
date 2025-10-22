@@ -34,4 +34,4 @@ check_nchar <- function(x, n) {
 #' @keywords internal
 #'
 #' @export
-read_url <- \(url) qs::qread_url(url)
+read_url <- function(url) qs::qread_url(url)
