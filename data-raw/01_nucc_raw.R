@@ -1,12 +1,11 @@
-clean_cols <- function(x) fuimus::remove_quotes(stringr::str_squish(dplyr::na_if(x, "")))
-parsedate  <- function(x) readr::parse_date(x, format = "%m/%d/%Y")
+source(here::here("data-raw", "fns.R"))
 
 # Define csv directory & paths
 csv_dir   <- here::here("data-raw/raw/csvs/")
 csv_paths <- fs::dir_ls(csv_dir)
 
 # NUCC Info Table Spec
-nucc_info_spec <- readr::cols(
+spec_info <- readr::cols(
   release_date = readr::col_date(format = ""),
   version      = readr::col_double(),
   major        = readr::col_integer(),
@@ -15,10 +14,12 @@ nucc_info_spec <- readr::cols(
   download_url = readr::col_character())
 
 # Read NUCC file info
-nucc_file_info <- readr::read_csv(file = here::here("data-raw/raw/nucc_file_info.csv"), col_types = nucc_info_spec)
+nucc_info <- readr::read_csv(
+  file      = here::here("data-raw/raw/nucc_file_info.csv"),
+  col_types = spec_info)
 
-# csv 1-22 : nucc_taxonomy_100 to nucc_taxonomy_220
-spec_1_22 <- readr::cols(
+# csv 1-22 : nucc_taxonomy_100 - 220 [22]
+spec_1.22 <- readr::cols(
   Code           = readr::col_character(),
   Grouping       = readr::col_character(),
   Classification = readr::col_character(),
@@ -26,23 +27,25 @@ spec_1_22 <- readr::cols(
   Definition     = readr::col_character(),
   Notes          = readr::col_character())
 
-nucc_csv_1_22 <- readr::read_csv(
+nucc_1.22 <- readr::read_csv(
   file           = csv_paths[1:22],
   id             = "file_name",
   show_col_types = FALSE,
-  col_types      = spec_1_22,
+  col_types      = spec_1.22,
   num_threads    = 4L) |>
   janitor::clean_names() |>
   collapse::mtt(
-    acr(c(file_name,
-          code,
-          grouping,
-          classification,
-          specialization,
-          definition,
-          notes),
-        clean_cols),
-    file_name = basename(file_name))
+    file_name = basename(file_name),
+    acr(janitor::make_clean_names(names(spec_1.22$cols)), clean_cols)) |>
+  collapse::sbt(stringr::str_detect(code, "^Copy", negate = TRUE))
+
+# code: 863
+# grouping: 29
+# classification: 251
+# specialization: 482
+# definition: 740
+# notes: 472
+
 
 # csv 23 : nucc_taxonomy_210
 spec_23 <- readr::cols(
@@ -52,10 +55,9 @@ spec_23 <- readr::cols(
   Specialization = readr::col_character(),
   Definition     = readr::col_character(),
   Notes          = readr::col_character(),
-  `Display Name` = readr::col_character()
-)
+  `Display Name` = readr::col_character())
 
-nucc_csv_23 <- readr::read_csv(
+nucc_23 <- readr::read_csv(
   file           = csv_paths[23],
   id             = "file_name",
   show_col_types = FALSE,
@@ -63,19 +65,21 @@ nucc_csv_23 <- readr::read_csv(
   num_threads    = 4L) |>
   janitor::clean_names() |>
   collapse::mtt(
-    acr(c(file_name,
-          code,
-          grouping,
-          classification,
-          specialization,
-          definition,
-          notes,
-          display_name),
-        clean_cols),
-    file_name = basename(file_name))
+    file_name = basename(file_name),
+    acr(janitor::make_clean_names(names(spec_23$cols)), clean_cols)) |>
+  collapse::sbt(stringr::str_detect(code, "^Copy", negate = TRUE))
+
+# code: 863
+# grouping: 29
+# classification: 244
+# specialization: 466
+# definition: 556
+# notes: 348
+# display_name: 865
+
 
 # csv 24-25 : nucc_taxonomy_211 & 220
-spec_24_25 <- readr::cols(
+spec_24.25 <- readr::cols(
   Code           = readr::col_character(),
   Grouping       = readr::col_character(),
   Classification = readr::col_character(),
@@ -83,28 +87,29 @@ spec_24_25 <- readr::cols(
   Definition     = readr::col_character(),
   Notes          = readr::col_character(),
   `Display Name` = readr::col_character(),
-  Section        = readr::col_character()
-)
+  Section        = readr::col_character())
 
-nucc_csv_24_25 <- readr::read_csv(
+nucc_24.25 <- readr::read_csv(
   file           = csv_paths[24:25],
   id             = "file_name",
   show_col_types = FALSE,
-  col_types      = spec_24_25,
+  col_types      = spec_24.25,
   num_threads    = 4L) |>
   janitor::clean_names() |>
   collapse::mtt(
-    acr(c(file_name,
-          code,
-          grouping,
-          classification,
-          specialization,
-          definition,
-          notes,
-          display_name,
-          section),
-        clean_cols),
-    file_name = basename(file_name))
+    file_name = basename(file_name),
+    acr(janitor::make_clean_names(names(spec_24.25$cols)), clean_cols)) |>
+  collapse::sbt(stringr::str_detect(code, "^Copy", negate = TRUE))
+
+# code: 868
+# grouping: 29
+# classification: 245
+# specialization: 468
+# definition: 559
+# notes: 352
+# display_name: 868
+# section: 2 [Individual/Non-Individual]
+
 
 # csv 26 : nucc_taxonomy_221
 spec_26 <- readr::cols(
@@ -118,10 +123,9 @@ spec_26 <- readr::cols(
   `Last Modified Date` = readr::col_character(),
   Notes                = readr::col_character(),
   `Display Name`       = readr::col_character(),
-  Section              = readr::col_character()
-)
+  Section              = readr::col_character())
 
-nucc_csv_26 <- readr::read_csv(
+nucc_26 <- readr::read_csv(
   file           = csv_paths[26],
   id             = "file_name",
   show_col_types = FALSE,
@@ -129,23 +133,24 @@ nucc_csv_26 <- readr::read_csv(
   num_threads    = 4L) |>
   janitor::clean_names() |>
   collapse::mtt(
-    acr(c(file_name,
-          code,
-          grouping,
-          classification,
-          specialization,
-          definition,
-          notes,
-          display_name,
-          section),
-        clean_cols),
-    acr(c(effective_date,
-          deactivation_date,
-          last_modified_date),
-        parsedate),
-    file_name = basename(file_name))
+    file_name = basename(file_name),
+    acr(janitor::make_clean_names(names(spec_26$cols)), clean_cols),
+    acr(c(effective_date, deactivation_date, last_modified_date), parsedate)) |>
+  collapse::sbt(stringr::str_detect(code, "^Copy", negate = TRUE))
 
-spec_27_32 <- readr::cols(
+# code: 868
+# grouping: 29
+# classification: 245
+# specialization: 468
+# definition: 559
+# effective_date: 34
+# deactivation_date: 5
+# last_modified_date: 22
+# notes: 352
+# display_name: 868
+# section: 2 [Individual/Non-Individual]
+
+spec_27.32 <- readr::cols(
   Code           = readr::col_character(),
   Grouping       = readr::col_character(),
   Classification = readr::col_character(),
@@ -153,67 +158,63 @@ spec_27_32 <- readr::cols(
   Definition     = readr::col_character(),
   Notes          = readr::col_character(),
   `Display Name` = readr::col_character(),
-  Section        = readr::col_character()
-)
+  Section        = readr::col_character())
 
-nucc_csv_27_32 <- readr::read_csv(
+nucc_27.32 <- readr::read_csv(
   file           = csv_paths[27:32],
   id             = "file_name",
   show_col_types = FALSE,
-  col_types      = spec_27_32,
+  col_types      = spec_27.32,
   num_threads    = 4L) |>
   janitor::clean_names() |>
   collapse::mtt(
-    acr(c(file_name,
-          code,
-          grouping,
-          classification,
-          specialization,
-          definition,
-          notes,
-          display_name,
-          section),
-        clean_cols),
-    file_name = basename(file_name))
+    file_name = basename(file_name),
+    acr(janitor::make_clean_names(names(spec_27.32$cols)), clean_cols)) |>
+  collapse::sbt(stringr::str_detect(code, "^Copy", negate = TRUE))
 
-spec_33_34 <- readr::cols(
+# code: 868
+# grouping: 29
+# classification: 245
+# specialization: 468
+# definition: 559
+# notes: 352
+# display_name: 868
+# section: 2 [Individual/Non-Individual]
+nucc_26 |>
+  collapse::sbt(
+    !is.na(section)
+    # & stringr::str_detect(definition, "^Definition to come", negate = TRUE)
+  ) |>
+  collapse::fcount(section) |>
+  collapse::roworder(-N)
+
+spec_33.34 <- readr::cols(
   Code           = readr::col_character(),
   Grouping       = readr::col_character(),
   Classification = readr::col_character(),
   Specialization = readr::col_character(),
   Definition     = readr::col_character(),
-  Notes          = readr::col_character()
-)
+  Notes          = readr::col_character())
 
-nucc_csv_33_34 <- readr::read_csv(
+nucc_33.34 <- readr::read_csv(
   file           = csv_paths[33:34],
   id             = "file_name",
   show_col_types = FALSE,
-  col_types      = spec_33_34,
+  col_types      = spec_33.34,
   num_threads    = 4L) |>
   janitor::clean_names() |>
   collapse::mtt(
-    acr(c(file_name,
-          code,
-          grouping,
-          classification,
-          specialization,
-          definition,
-          notes),
-        clean_cols),
-    file_name = basename(file_name))
-
-
+    file_name = basename(file_name),
+    acr(janitor::make_clean_names(names(spec_33.34$cols)), clean_cols)) |>
+  collapse::sbt(stringr::str_detect(code, "^Copy", negate = TRUE))
 
 vctrs::vec_rbind(
-  nucc_csv_1_22,
-  nucc_csv_23,
-  nucc_csv_24_25,
-  nucc_csv_26,
-  nucc_csv_27_32,
-  nucc_csv_33_34) |>
-  collapse::sbt(
-    stringr::str_detect(code, "^Copy", negate = TRUE))
+  nucc_1.22,
+  nucc_23,
+  nucc_24.25,
+  nucc_26,
+  nucc_27.32,
+  nucc_33.34)
 
 
 notes_regs <- c(
