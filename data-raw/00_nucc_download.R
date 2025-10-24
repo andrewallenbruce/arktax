@@ -39,6 +39,7 @@ curl::multi_download(
   destfile = dest_files,
   resume   = TRUE)
 
+# Archive NUCC csv files into tar.xz
 archive::archive_write_dir(
   archive = fs::path(nucc_dir, "nucc_csv.tar.xz"),
   dir     = csv_dir

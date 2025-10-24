@@ -2,9 +2,7 @@ data <- "https://data.cms.gov/data.json" |>
   httr2::request() |>
   httr2::req_perform() |>
   httr2::resp_body_string() |>
-  RcppSimdJson::fparse(query = "/dataset") |>
-  fastplyr::as_tbl()
-
+  RcppSimdJson::fparse(query = "/dataset")
 
 dist <- data |>
   providertwo:::get_distribution(DF.as.list = TRUE) |>
@@ -17,8 +15,7 @@ dist <- data |>
     identifier = accessURL,
     download   = cheapr::lag_(downloadURL, n = -1L),
     resources  = resourcesAPI) |>
-  collapse::roworder(title, -year) |>
-  fastplyr::as_tbl()
+  collapse::roworder(title, -year)
 
 dist <- cheapr::sset(dist, cheapr::which_(cheapr::row_na_counts(dist) < 3L))
 
@@ -78,6 +75,14 @@ xwalk_resources <- xwalk_urls |>
     year
   ))
 
+xwalk_info <- xwalk_resources |>
+  collapse::sbt(ext == "csv") |>
+  collapse::mtt(file_name = gsub("__", "_", gsub(" ", "_", tolower(URLdecode(basename(download)))))) |>
+  collapse::gby(file_name) |>
+  collapse::mtt(id = collapse::seqid(year)) |>
+  collapse::fungroup() |>
+  collapse::mtt(file_name = glue::glue("Y{year}_{id}_{file_name}"), id = NULL)
+
 # Define XWALK directory path
 xwalk_dir <- fs::path_abs("data-raw/xwalk/")
 
@@ -100,14 +105,6 @@ if (!fs::dir_exists(xwalk_csv_dir)) {
   fs::dir_create(xwalk_csv_dir)
 }
 
-xwalk_info <- xwalk_resources |>
-  collapse::sbt(ext == "csv") |>
-  collapse::mtt(file_name = gsub("__", "_", gsub(" ", "_", tolower(URLdecode(basename(download)))))) |>
-  collapse::gby(file_name) |>
-  collapse::mtt(id = collapse::seqid(year)) |>
-  collapse::fungroup() |>
-  collapse::mtt(file_name = glue::glue("Y{year}_{id}_{file_name}"), id = NULL)
-
 # Create file path destinations
 xwalk_dest_files <- fs::path(xwalk_csv_dir, xwalk_info$file_name)
 
@@ -116,3 +113,9 @@ curl::multi_download(
   urls     = xwalk_info$download,
   destfile = xwalk_dest_files,
   resume   = TRUE)
+
+# Archive XWALK csv files into tar.xz
+archive::archive_write_dir(
+  archive = fs::path(xwalk_dir, "xwalk_csv.tar.xz"),
+  dir     = xwalk_csv_dir
+)
