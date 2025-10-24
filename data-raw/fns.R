@@ -1,21 +1,11 @@
-nucc_url_prefix <- function(x) {
-  glue::glue("https://www.nucc.org/images/stories/CSV/{x}")
-}
+nucc_url_prefix <- \(x) glue::glue("https://www.nucc.org/images/stories/CSV/{x}")
+clean_columns   <- \(x) fuimus::remove_quotes(stringr::str_squish(dplyr::na_if(x, "")))
 
-clean_columns <- function(x) {
-  fuimus::remove_quotes(stringr::str_squish(dplyr::na_if(x, "")))
-}
-
-parse_mdy <- function(x) {
-  readr::parse_date(x, format = "%m/%d/%y")
-}
-
-parse_mdY <- function(x) {
-  readr::parse_date(x, format = "%m/%d/%Y")
-}
+parse_mdy <- \(x) readr::parse_date(x, format = "%m/%d/%y")
+parse_mdY <- \(x) readr::parse_date(x, format = "%m/%d/%Y")
+parse_Ymd <- \(x) readr::parse_date(x, format = "%Y-%m-%d")
 
 clean_nucc_info <- function(html_path) {
-
   html <- brio::read_lines(html_path)
 
   rexprs <- c(
@@ -52,6 +42,66 @@ clean_nucc_info <- function(html_path) {
     ) |>
     collapse::slt(release_date, version, major, minor, file_name, download_url)
 
+}
+
+get_xwalk_info <- function() {
+  x <- RcppSimdJson::fload(json = "https://data.cms.gov/data.json", query = "/dataset")
+  x <- collapse::sbt(x, stringr::str_which(title, "[Tt]axonomy"))
+
+  temp <- x |>
+    collapse::get_elem("distribution", DF.as.list = TRUE) |>
+    collapse::rowbind(fill = TRUE) |>
+    collapse::fcompute(
+      year       = stringr::str_extract(title, "[12]{1}[0-9]{3}") |> as.integer(),
+      title      = stringr::str_remove(title, " : [0-9]{4}-[0-9]{2}-[0-9]{2}([0-9A-Za-z]{1,3})?$"),
+      format     = kit::iif(!is.na(description), description, format, nThread = 4L),
+      modified   = parse_Ymd(modified),
+      identifier = accessURL,
+      download   = cheapr::lag_(downloadURL, n = -1L),
+      resources  = resourcesAPI
+    ) |>
+    collapse::roworder(title, -year)
+
+  temp <- cheapr::sset(tmp, cheapr::which_(cheapr::row_na_counts(tmp) < 3L))
+
+  base <- x |>
+    collapse::mtt(
+      modified    = parse_Ymd(modified),
+      periodicity = accrualPeriodicity,
+      references  = unlist(references, use.names = FALSE),
+      dictionary  = describedBy,
+      site        = landingPage
+    ) |>
+    collapse::join(
+      collapse::sbt(temp, format == "latest", c("title", "download", "resources")),
+      on = "title",
+      verbose = 0,
+      multiple = TRUE
+    ) |>
+    collapse::roworder(title) |>
+    collapse::colorder(title, description)
+
+  base <- cheapr::sset(base, cheapr::which_(cheapr::row_na_counts(base) < 3L))
+
+  collapse::sbt(temp, format != "latest", -format) |>
+    collapse::roworder(title, -year) |>
+    collapse::join(
+      collapse::slt(
+        base,
+        c(
+          "title",
+          "description",
+          "periodicity",
+          "dictionary",
+          "site",
+          "references"
+        )
+      ),
+      on = "title",
+      verbose = 0,
+      multiple = TRUE
+    ) |>
+    fastplyr::as_tbl()
 }
 
 # Pin management functions

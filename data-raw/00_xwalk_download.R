@@ -1,56 +1,8 @@
-data <- "https://data.cms.gov/data.json" |>
-  httr2::request() |>
-  httr2::req_perform() |>
-  httr2::resp_body_string() |>
-  RcppSimdJson::fparse(query = "/dataset")
+source(here::here("data-raw", "fns.R"))
 
-dist <- data |>
-  providertwo:::get_distribution(DF.as.list = TRUE) |>
-  collapse::rowbind(fill = TRUE) |>
-  collapse::fcompute(
-    year       = providertwo:::extract_year(title),
-    title      = providertwo:::gremove(title, " : [0-9]{4}-[0-9]{2}-[0-9]{2}([0-9A-Za-z]{1,3})?$"),
-    format     = kit::iif(!is.na(description), description, format, nThread = 4L),
-    modified   = providertwo:::as_date(modified),
-    identifier = accessURL,
-    download   = cheapr::lag_(downloadURL, n = -1L),
-    resources  = resourcesAPI) |>
-  collapse::roworder(title, -year)
+xwalk_info <- get_xwalk_info()
 
-dist <- cheapr::sset(dist, cheapr::which_(cheapr::row_na_counts(dist) < 3L))
-
-base <- data |>
-  collapse::mtt(
-    uuid        = providertwo:::uuid_from_url(identifier),
-    modified    = providertwo:::as_date(modified),
-    periodicity = accrualPeriodicity,
-    references  = unlist(references, use.names = FALSE),
-    title       = providertwo:::clean_title(title),
-    description = providertwo:::clean_title(description),
-    dictionary  = describedBy,
-    site        = landingPage,
-    .keep       = c("identifier", "references")
-  ) |>
-  providertwo:::join_on_title(
-    collapse::sbt(dist, format == "latest", c("title", "download", "resources"))) |>
-  collapse::roworder(title) |>
-  collapse::colorder(title, description)
-
-base <- cheapr::sset(base, cheapr::which_(cheapr::row_na_counts(base) < 3L))
-
-dist <- collapse::sbt(dist, format != "latest", -format) |>
-  collapse::roworder(title, -year) |>
-  providertwo:::f_nest(by = c("title", "download_only")) |>
-  providertwo:::join_on_title(collapse::slt(base, c("title", "description", "periodicity", "dictionary", "site", "references"))) |>
-  collapse::colorder(endpoints, pos = "end")
-
-xwalk_urls <- dist[
-  stringr::str_which(dist$title, "[Tt]axonomy"), ] |>
-  _$endpoints |>
-  purrr::pluck(1) |>
-  _$resources
-
-xwalk_resources <- xwalk_urls |>
+xwalk_source <- xwalk_info$resources |>
   purrr::map(httr2::request) |>
   httr2::req_perform_parallel(on_error = "continue") |>
   httr2::resps_successes() |>
@@ -70,7 +22,7 @@ xwalk_resources <- xwalk_urls |>
   collapse::mtt(year = ifelse(
     is.na(year),
     as.integer(
-      stringi::stri_extract_first_regex(download, "[12]{1}[0-9]{3}")
+      stringr::str_extract(download, "[12]{1}[0-9]{3}")
     ),
     year
   ))
