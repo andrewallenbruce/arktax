@@ -17,7 +17,7 @@
 	<link href="/templates/js_keenly/css/joomla30-cherry-responsive.css" rel="stylesheet" type="text/css" />
 	<link href="/templates/js_keenly/css/custom.css" rel="stylesheet" type="text/css" />
 	<link href="/templates/js_keenly/wright/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-	<script type="application/json" class="joomla-script-options new">{"csrf.token":"6517c348ba90d48ea03ac7c1d9123647","system.paths":{"root":"","base":""}}</script>
+	<script type="application/json" class="joomla-script-options new">{"csrf.token":"bc8dc72fc4e9000d40726b7050dda2ba","system.paths":{"root":"","base":""}}</script>
 	<script src="/templates/js_keenly/js/jui/jquery.min.js?627940de1391ce3681cea92c6759c867" type="text/javascript"></script>
 	<script src="/media/jui/js/jquery-noconflict.js?627940de1391ce3681cea92c6759c867" type="text/javascript"></script>
 	<script src="/media/jui/js/jquery-migrate.min.js?627940de1391ce3681cea92c6759c867" type="text/javascript"></script>

@@ -1,4 +1,4 @@
-source(here::here("data-raw", "pins_internal.R"))
+source(here::here("data-raw", "fns.R"))
 
 na_squish <- \(x) stringr::str_squish(fuimus::na_if_common(x))
 

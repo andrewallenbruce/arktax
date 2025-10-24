@@ -1,54 +1,45 @@
 source(here::here("data-raw", "fns.R"))
 
+# Define NUCC directory path
+nucc_dir <- fs::path_abs("data-raw/nucc/")
+
+# Create nucc directory if it doesn't exist
+if (!fs::dir_exists(nucc_dir)) {
+  fs::dir_create(nucc_dir)
+}
+
 # NUCC URL with csv download URLs & file path
 nucc_url_info   <- "https://www.nucc.org/index.php/code-sets-mainmenu-41/provider-taxonomy-mainmenu-40/csv-mainmenu-57"
-nucc_html_path  <- here::here("data-raw/raw/nucc_html.txt")
+nucc_html_path  <- fs::path(nucc_dir, "nucc_html.txt")
+nucc_html_csv   <- fs::path(nucc_dir, "nucc_file_info.csv")
 
 # Download NUCC taxonomy HTML
 xml2::download_html(url = nucc_url_info, file = nucc_html_path)
 
-# Read NUCC taxonomy HTML
-nucc_html <- brio::read_lines(nucc_html_path)
-
-# Extract NUCC csv file information into list
-x <- nucc_html[stringr::str_which(nucc_html, "Version")] |>
-  stringr::str_replace_all(c(
-    "[\"']"     = "",
-    "<li><a href=/images/stories/CSV/|</a></li>" = "",
-    ">"         = " ",
-    ","         = ""
-  )) |>
-  stringr::str_split(" ") |>
-  purrr::list_transpose() |>
-  rlang::set_names(c("file_name", "TXT", "version", "release_date"))
-
-# List -> tibble, cleanse, add download URL
-nucc_info <- fastplyr::new_tbl(
-  file_name    = x$file_name,
-  version      = x$version,
-  release_date = parsedate_mdy(x$release_date),
-  download_url = nucc_url_prefix(x$file_name)) |>
-  collapse::mtt(major = as.integer(stringr::str_c("20", stringr::str_pad(stringr::str_extract(version, "^.*(?=[.])"), width = 2, pad = "0"))),
-                minor = as.integer(stringr::str_extract(version, "(?<=[.]).*$")),
-                version = as.double(version)) |>
-  collapse::slt(release_date, version, major, minor, file_name, download_url)
+# Extract NUCC csv file information into tibble
+nucc_info <- clean_nucc_info(nucc_html_path)
 
 # Save NUCC file info csv
-readr::write_csv(nucc_info, here::here("data-raw/raw/nucc_file_info.csv"))
+readr::write_csv(x = nucc_info, file = nucc_html_csv, num_threads = 4L)
 
 # Define csv directory path
-csv_dir <- here::here("data-raw/raw/csvs/")
+csv_dir <- fs::path(nucc_dir, "csvs")
 
 # Create csv directory if it doesn't exist
 if (!fs::dir_exists(csv_dir)) {
   fs::dir_create(csv_dir)
 }
 
-# Create vector of destination file paths
-dest_files <- glue::glue("{csv_dir}/{nucc_info$file_name}")
+# Create file path destinations
+dest_files <- fs::path(csv_dir, nucc_info$file_name)
 
 # Download NUCC taxonomy csv files
 curl::multi_download(
   urls     = nucc_info$download_url,
   destfile = dest_files,
   resume   = TRUE)
+
+archive::archive_write_dir(
+  archive = fs::path(nucc_dir, "nucc_csv.tar.xz"),
+  dir     = csv_dir
+)
