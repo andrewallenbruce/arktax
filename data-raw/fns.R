@@ -44,7 +44,10 @@ clean_nucc_info <- function(html_path) {
 
 }
 
-get_xwalk_info <- function() {
+get_xwalk_api <- function() {
+
+  ss_3NA <- \(x) cheapr::sset(x, cheapr::which_(cheapr::row_na_counts(x) < 3L))
+
   x <- RcppSimdJson::fload(json = "https://data.cms.gov/data.json", query = "/dataset")
   x <- collapse::sbt(x, stringr::str_which(title, "[Tt]axonomy"))
 
@@ -62,7 +65,7 @@ get_xwalk_info <- function() {
     ) |>
     collapse::roworder(title, -year)
 
-  temp <- cheapr::sset(tmp, cheapr::which_(cheapr::row_na_counts(tmp) < 3L))
+  temp <- ss_3NA(temp)
 
   base <- x |>
     collapse::mtt(
@@ -81,7 +84,7 @@ get_xwalk_info <- function() {
     collapse::roworder(title) |>
     collapse::colorder(title, description)
 
-  base <- cheapr::sset(base, cheapr::which_(cheapr::row_na_counts(base) < 3L))
+  base <- ss_3NA(base)
 
   collapse::sbt(temp, format != "latest", -format) |>
     collapse::roworder(title, -year) |>
@@ -102,6 +105,35 @@ get_xwalk_info <- function() {
       multiple = TRUE
     ) |>
     fastplyr::as_tbl()
+}
+
+get_xwalk_src <- function(x) {
+  purrr::map(x, \(x) RcppSimdJson::fload(json = x, query = "/data")) |>
+    purrr::list_rbind() |>
+    collapse::mtt(
+      year = as.integer(stringr::str_extract(name, "[12]{1}[0-9]{3}")),
+      file = gsub("  ", " ", gsub(" [0-9]{4}|[0-9]{4} ", "", name, perl = TRUE), perl = TRUE),
+      size = fs::as_fs_bytes(fileSize),
+      ext = tolower(fs::path_ext(downloadURL)),
+      download = downloadURL,
+      .keep = c("year", "file", "size", "ext")) |>
+    fastplyr::f_fill(year) |>
+    fastplyr::as_tbl() |>
+    collapse::mtt(year = ifelse(is.na(year), as.integer(stringr::str_extract(download, "[12]{1}[0-9]{3}")), year))
+}
+
+get_xwalk_info <- function(x) {
+  x |>
+    collapse::sbt(ext == "csv") |>
+    collapse::mtt(file_name = gsub("__", "_", gsub(" ", "_", tolower(
+      URLdecode(basename(download))
+    )))) |>
+    collapse::gby(file_name) |>
+    collapse::mtt(id = collapse::seqid(year)) |>
+    collapse::fungroup() |>
+    collapse::mtt(file_name = glue::glue("Y{year}_{id}_{file_name}"),
+                  id = NULL)
+
 }
 
 # Pin management functions

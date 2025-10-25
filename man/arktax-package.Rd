@@ -4,7 +4,7 @@
 \name{arktax-package}
 \alias{arktax}
 \alias{arktax-package}
-\title{arktax: NUCC Provider Taxonomy Codesets}
+\title{arktax: NUCC Healthcare Provider Taxonomy Codes}
 \description{
 Programmatic interface to the NUCC Health Care Provider Taxonomy Code Set, including the raw codesets from 2009 to present, various different forms of the data, and the Medicare specialty-to-taxonomy crosswalk dataset.
 }
