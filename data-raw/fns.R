@@ -1,9 +1,32 @@
 nucc_url_prefix <- \(x) glue::glue("https://www.nucc.org/images/stories/CSV/{x}")
-clean_columns   <- \(x) fuimus::remove_quotes(stringr::str_squish(dplyr::na_if(x, "")))
+
+clean_columns <- function (x) {
+  x <- iconv(x, "", "UTF-8", sub = "")
+  x <- gsub("[^\x20-\x7E]", "", x, perl = TRUE)
+  # x <- gsub("\\x96", "", x, perl = TRUE)
+  x <- gsub("[\"']", "", x, perl = TRUE)
+  x <- trimws(x)
+  x <- gsub("  ", " ", x, perl = TRUE)
+  dplyr::na_if(x, "")
+}
 
 parse_mdy <- \(x) readr::parse_date(x, format = "%m/%d/%y")
 parse_mdY <- \(x) readr::parse_date(x, format = "%m/%d/%Y")
 parse_Ymd <- \(x) readr::parse_date(x, format = "%Y-%m-%d")
+
+read_nucc <- function(path) {
+  readr::read_csv(
+    file = path,
+    id = "file_name",
+    show_col_types = FALSE,
+    col_types = readr::cols(),
+    num_threads = 4L) |>
+    collapse::sbt(stringr::str_detect(Code, "^Copy", negate = TRUE)) |>
+    collapse::mtt(file_name = basename(file_name)) |>
+    janitor::clean_names() |>
+    # cheapr::sset(318) |> _$specialization
+    purrr::modify_if(is.character, clean_columns)
+}
 
 clean_nucc_info <- function(html_path) {
   html <- brio::read_lines(html_path)
