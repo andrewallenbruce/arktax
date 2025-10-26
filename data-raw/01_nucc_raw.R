@@ -31,12 +31,12 @@ nucc_1.22 <- readr::read_csv(
   file           = csv_paths[1:22],
   id             = "file_name",
   show_col_types = FALSE,
-  col_types      = spec_1.22,
+  # col_types      = spec_1.22,
   num_threads    = 4L) |>
   janitor::clean_names() |>
   collapse::mtt(
     file_name = basename(file_name),
-    acr(janitor::make_clean_names(names(spec_1.22$cols)), clean_cols)) |>
+    acr(janitor::make_clean_names(names(spec_1.22$cols)), clean_columns)) |>
   collapse::sbt(stringr::str_detect(code, "^Copy", negate = TRUE))
 
 # code: 863

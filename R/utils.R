@@ -25,6 +25,34 @@ check_nchar <- function(x, n) {
   }
 }
 
+#' Valid Taxonomy Code with Regex
+#'
+#' @param code `<chr>` Health Care Provider Taxonomy code, a unique
+#'  alphanumeric code, ten characters in length
+#' @param negate `<lgl>` if `TRUE`, return `TRUE` for invalid codes
+#'
+#' @returns `<lgl>` vector
+#'
+#' @examples
+#' valid_taxonomy_regex("103T00000X")
+#'
+#'
+#' x <- c("207RA0002X", "207SG0207X", "207V10300X", "207WX0009X",
+#'        "207WX0108X", "226000000X", "342000000X", "405300000X")
+#'
+#' valid_taxonomy_regex(x)
+#'
+#' x[!valid_taxonomy_regex(x)]
+#' @autoglobal
+#'
+#' @noRd
+valid_taxonomy_regex <- function(code, negate = FALSE) {
+  stringi::stri_detect_regex(
+    str     = code,
+    pattern = "^[1-4][0-9]{2}[0-9A-HJ-NP-Z][0A-IL-NP-X][0-4][0-9][0-69][0-9][X]$",
+    negate  = negate)
+}
+
 #' Read from a URL
 #'
 #' @param url `<chr>` url
