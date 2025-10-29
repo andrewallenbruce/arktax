@@ -1,5 +1,12 @@
 <!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
 
+# arktax 0.0.1.9008 (2025-10-29)
+
+* tested xwalk download pipeline
+* NUCC raw processing
+* `valid_taxonomy_regex` function
+
+
 # arktax 0.0.1.9007 (2025-10-24)
 
 * streamlined download pipeline
