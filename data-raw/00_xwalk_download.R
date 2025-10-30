@@ -14,18 +14,18 @@ if (!fs::dir_exists(xwalk_dir)) {
 
 # Save XWALK file info csv
 readr::write_csv(
-  x = xwalk_api,
-  file = fs::path(xwalk_dir, "xwalk_api.csv"),
+  x           = xwalk_api,
+  file        = fs::path(xwalk_dir, "xwalk_api.csv"),
   num_threads = 4L
 )
 readr::write_csv(
-  x = xwalk_src,
-  file = fs::path(xwalk_dir, "xwalk_src.csv"),
+  x           = xwalk_src,
+  file        = fs::path(xwalk_dir, "xwalk_src.csv"),
   num_threads = 4L
 )
 readr::write_csv(
-  x = xwalk_info,
-  file = fs::path(xwalk_dir, "xwalk_info.csv"),
+  x           = xwalk_info,
+  file        = fs::path(xwalk_dir, "xwalk_info.csv"),
   num_threads = 4L
 )
 

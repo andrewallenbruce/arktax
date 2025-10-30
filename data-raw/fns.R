@@ -1,6 +1,12 @@
-nucc_url_prefix <- \(x) glue::glue("https://www.nucc.org/images/stories/CSV/{x}")
+read_csv_list <- function(paths, ...) {
+  purrr::map(paths, function(x) readr::read_csv(file = x, col_types = readr::cols(), num_threads = 4L, ...))
+}
 
-clean_columns <- function (x) {
+basename_sans_ext <- \(path) x |> tools::file_path_sans_ext() |> basename()
+
+nucc_url_prefix <- function(x) glue::glue("https://www.nucc.org/images/stories/CSV/{x}")
+
+clean_columns <- function(x) {
   x <- iconv(x, "", "UTF-8", sub = "")
   x <- gsub("[^\x20-\x7E]", "", x, perl = TRUE)
   # x <- gsub("\\x96", "", x, perl = TRUE)
@@ -24,7 +30,6 @@ read_nucc <- function(path) {
     collapse::sbt(stringr::str_detect(Code, "^Copy", negate = TRUE)) |>
     collapse::mtt(file_name = basename(file_name)) |>
     janitor::clean_names() |>
-    # cheapr::sset(318) |> _$specialization
     purrr::modify_if(is.character, clean_columns)
 }
 
