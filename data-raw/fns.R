@@ -1,36 +1,92 @@
-read_csv_list <- function(paths, ...) {
-  purrr::map(paths, function(x) readr::read_csv(file = x, col_types = readr::cols(), num_threads = 4L, ...))
+# General data cleaning functions
+months_regex <- "
+([Jj]an(?:uary)?|
+[Ff]eb(?:ruary)?|
+[Mm]ar(?:ch)?|
+[Aa]pr(?:il)?|
+[Mm]ay|
+[Jj]un(?:e)?|
+[Jj]ul(?:y)?|
+[Aa]ug(?:ust)?|
+[Ss]ep(?:tember)?|
+[Oo]ct(?:ober)?|
+[Nn]ov(?:ember)?|
+[Dd]ec(?:ember)?)
+"
+
+months_regex <- fuimus::single_line_string(x = months_regex)
+
+extract_year <- function(x) {
+  stringr::str_extract(x, "[12]{1}[0-9]{3}")
 }
 
-basename_sans_ext <- \(path) x |> tools::file_path_sans_ext() |> basename()
-
-nucc_url_prefix <- function(x) glue::glue("https://www.nucc.org/images/stories/CSV/{x}")
+na_if_blank <- function(x, y = "") {
+  vctrs::vec_slice(x, vctrs::vec_in(x, y, needles_arg = "x", haystack_arg = "y")) <- NA
+  x
+}
 
 clean_columns <- function(x) {
   x <- iconv(x, "", "UTF-8", sub = "")
   x <- gsub("[^\x20-\x7E]", "", x, perl = TRUE)
   # x <- gsub("\\x96", "", x, perl = TRUE)
-  x <- gsub("[\"']", "", x, perl = TRUE)
-  x <- trimws(x)
-  x <- gsub("  ", " ", x, perl = TRUE)
-  dplyr::na_if(x, "")
+  x <- gsub("[\"']", " ", x, perl = TRUE)
+  # x <- trimws(x)
+  x <- stringr::str_squish(x)
+  # x <- gsub("  ", " ", x, perl = TRUE)
+  na_if_blank(x, "")
 }
 
-parse_mdy <- \(x) readr::parse_date(x, format = "%m/%d/%y")
-parse_mdY <- \(x) readr::parse_date(x, format = "%m/%d/%Y")
-parse_Ymd <- \(x) readr::parse_date(x, format = "%Y-%m-%d")
+basename_sans_ext <- function(path) {
+  tools::file_path_sans_ext(basename(path))
+}
 
-read_nucc <- function(path) {
+parse_mdy <- function(x) {
+  readr::parse_date(x, format = "%m/%d/%y")
+}
+parse_mdY <- function(x) {
+  readr::parse_date(x, format = "%m/%d/%Y")
+}
+parse_Ymd <- function(x) {
+  readr::parse_date(x, format = "%Y-%m-%d")
+}
+
+# read_csv_list(xwalk_path_notes, col_names = "note") |>
+# rlang::set_names(basename_sans_ext(xwalk_path_notes)) |>
+# purrr::list_rbind(names_to = "file")
+read_csv_list <- function(paths, ...) {
+  purrr::map(
+    paths,
+    function(x)
+      readr::read_csv(
+        file        = x,
+        col_types   = readr::cols(),
+        num_threads = 4L,
+        ...)
+    )
+}
+
+nucc_url_prefix <- function(x) {
+  glue::glue("https://www.nucc.org/images/stories/CSV/{x}")
+}
+
+read_csvs <- function(path) {
   readr::read_csv(
-    file = path,
-    id = "file_name",
+    file           = path,
+    id             = "file_name",
     show_col_types = FALSE,
-    col_types = readr::cols(),
-    num_threads = 4L) |>
-    collapse::sbt(stringr::str_detect(Code, "^Copy", negate = TRUE)) |>
+    col_types      = readr::cols(),
+    num_threads    = 4L) |>
     collapse::mtt(file_name = basename(file_name)) |>
     janitor::clean_names() |>
     purrr::modify_if(is.character, clean_columns)
+}
+
+
+read_nucc <- function(path) {
+  collapse::sbt(
+    read_csvs(path),
+    stringr::str_detect(Code, "^Copy", negate = TRUE)
+  )
 }
 
 clean_nucc_info <- function(html_path) {
@@ -83,7 +139,7 @@ get_xwalk_api <- function() {
     collapse::get_elem("distribution", DF.as.list = TRUE) |>
     collapse::rowbind(fill = TRUE) |>
     collapse::fcompute(
-      year       = stringr::str_extract(title, "[12]{1}[0-9]{3}") |> as.integer(),
+      year       = extract_year(title) |> as.integer(),
       title      = stringr::str_remove(title, " : [0-9]{4}-[0-9]{2}-[0-9]{2}([0-9A-Za-z]{1,3})?$"),
       format     = kit::iif(!is.na(description), description, format, nThread = 4L),
       modified   = parse_Ymd(modified),
@@ -139,7 +195,7 @@ get_xwalk_src <- function(x) {
   purrr::map(x, \(x) RcppSimdJson::fload(json = x, query = "/data")) |>
     purrr::list_rbind() |>
     collapse::mtt(
-      year = as.integer(stringr::str_extract(name, "[12]{1}[0-9]{3}")),
+      year = extract_year(name, "[12]{1}[0-9]{3}") |> as.integer(),
       file = gsub("  ", " ", gsub(" [0-9]{4}|[0-9]{4} ", "", name, perl = TRUE), perl = TRUE),
       size = fs::as_fs_bytes(fileSize),
       ext = tolower(fs::path_ext(downloadURL)),
