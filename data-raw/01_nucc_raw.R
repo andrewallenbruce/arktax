@@ -11,7 +11,7 @@ nucc_info <- readr::read_csv(
   collapse::mtt(major = as.integer(major), minor = as.integer(minor))
 
 nucc_list <- purrr::map(nucc_csv_paths, read_nucc) |>
-  rlang::set_names(basename(fs::path_ext_remove(nucc_csv_paths)))
+  rlang::set_names(basename_sans_ext(nucc_csv_paths))
 
 # nucc_taxonomy_211 & 220
 # display_name & section first appear

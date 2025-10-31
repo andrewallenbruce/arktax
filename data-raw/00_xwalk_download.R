@@ -1,53 +1,33 @@
 source(here::here("data-raw", "fns.R"))
 
-xwalk_api  <- get_xwalk_api()
-xwalk_src  <- get_xwalk_src(xwalk_api$resources)
-xwalk_info <- get_xwalk_info(xwalk_src)
+xwalk_api  <- xwalk_get_api()
+xwalk_src  <- xwalk_get_src(xwalk_api$resources)
+xwalk_info <- xwalk_get_info(xwalk_src)
 
-# Define XWALK directory path
+# Create XWALK directory
 xwalk_dir <- fs::path_abs("data-raw/xwalk/")
 
-# Create XWALK directory if it doesn't exist
-if (!fs::dir_exists(xwalk_dir)) {
-  fs::dir_create(xwalk_dir)
-}
+if (!fs::dir_exists(xwalk_dir)) fs::dir_create(xwalk_dir)
 
-# Save XWALK file info csv
-readr::write_csv(
-  x           = xwalk_api,
-  file        = fs::path(xwalk_dir, "xwalk_api.csv"),
-  num_threads = 4L
-)
-readr::write_csv(
-  x           = xwalk_src,
-  file        = fs::path(xwalk_dir, "xwalk_src.csv"),
-  num_threads = 4L
-)
-readr::write_csv(
-  x           = xwalk_info,
-  file        = fs::path(xwalk_dir, "xwalk_info.csv"),
-  num_threads = 4L
-)
+# Save XWALK info files
+readr::write_csv(x = xwalk_api, file = fs::path(xwalk_dir, "xwalk_api.csv"), num_threads = 4L)
+readr::write_csv(x = xwalk_src, file = fs::path(xwalk_dir, "xwalk_src.csv"), num_threads = 4L)
+readr::write_csv(x = xwalk_info, file = fs::path(xwalk_dir, "xwalk_info.csv"), num_threads = 4L)
 
-# Define XWALK csv directory path
+# Create XWALK csv directory
 xwalk_csv_dir <- fs::path(xwalk_dir, "csvs")
 
-# Create csv directory if it doesn't exist
-if (!fs::dir_exists(xwalk_csv_dir)) {
-  fs::dir_create(xwalk_csv_dir)
-}
+if (!fs::dir_exists(xwalk_csv_dir)) fs::dir_create(xwalk_csv_dir)
 
-# Create file path destinations
-xwalk_dest_files <- fs::path(xwalk_csv_dir, xwalk_info$file_name)
-
-# Download XWALK csv files
+# Download XWALK csvs
 curl::multi_download(
-  urls     = xwalk_info$download,
-  destfile = xwalk_dest_files,
-  resume   = TRUE)
+  urls = xwalk_info$download,
+  destfile = fs::path(xwalk_csv_dir, xwalk_info$file_name),
+  resume = TRUE
+)
 
-# Archive XWALK csv files into tar.xz
+# Archive XWALK csvs
 archive::archive_write_dir(
   archive = fs::path(xwalk_dir, "xwalk_csv.tar.xz"),
-  dir     = xwalk_csv_dir
+  dir = xwalk_csv_dir
 )

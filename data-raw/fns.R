@@ -1,20 +1,9 @@
 # General data cleaning functions
-months_regex <- "
-([Jj]an(?:uary)?|
-[Ff]eb(?:ruary)?|
-[Mm]ar(?:ch)?|
-[Aa]pr(?:il)?|
-[Mm]ay|
-[Jj]un(?:e)?|
-[Jj]ul(?:y)?|
-[Aa]ug(?:ust)?|
-[Ss]ep(?:tember)?|
-[Oo]ct(?:ober)?|
-[Nn]ov(?:ember)?|
-[Dd]ec(?:ember)?)
-"
-
-months_regex <- fuimus::single_line_string(x = months_regex)
+months_regex <- stringr::str_remove_all(
+  "([Jj]an(?:uary)?|[Ff]eb(?:ruary)?|[Mm]ar(?:ch)?|[Aa]pr(?:il)?|
+  [Mm]ay|[Jj]un(?:e)?|[Jj]ul(?:y)?|[Aa]ug(?:ust)?|[Ss]ep(?:tember)?|
+  [Oo]ct(?:ober)?|[Nn]ov(?:ember)?|[Dd]ec(?:ember)?)",
+  "\\n\\s*")
 
 extract_year <- function(x) {
   stringr::str_extract(x, "[12]{1}[0-9]{3}")
@@ -51,22 +40,17 @@ parse_Ymd <- function(x) {
 }
 
 # read_csv_list(xwalk_path_notes, col_names = "note") |>
-# rlang::set_names(basename_sans_ext(xwalk_path_notes)) |>
 # purrr::list_rbind(names_to = "file")
 read_csv_list <- function(paths, ...) {
-  purrr::map(
-    paths,
-    function(x)
+  paths |>
+    purrr::map(function(x)
       readr::read_csv(
         file        = x,
         col_types   = readr::cols(),
         num_threads = 4L,
-        ...)
-    )
-}
-
-nucc_url_prefix <- function(x) {
-  glue::glue("https://www.nucc.org/images/stories/CSV/{x}")
+        ...
+      )) |>
+    rlang::set_names(basename_sans_ext(paths))
 }
 
 read_csvs <- function(path) {
@@ -76,27 +60,26 @@ read_csvs <- function(path) {
     show_col_types = FALSE,
     col_types      = readr::cols(),
     num_threads    = 4L) |>
-    collapse::mtt(file_name = basename(file_name)) |>
+    collapse::mtt(file_name = basename_sans_ext(file_name)) |>
     janitor::clean_names() |>
     purrr::modify_if(is.character, clean_columns)
 }
 
-
-read_nucc <- function(path) {
-  collapse::sbt(
-    read_csvs(path),
-    stringr::str_detect(Code, "^Copy", negate = TRUE)
-  )
+nucc_read_csvs <- function(path) {
+  read_csvs(path) |>
+    collapse::sbt(stringr::str_detect(Code, "^Copy", negate = TRUE))
 }
 
-clean_nucc_info <- function(html_path) {
-  html <- brio::read_lines(html_path)
+nucc_clean_info <- function(path) {
+  url_prefix <- \(x) glue::glue("https://www.nucc.org/images/stories/CSV/{x}")
+
+  html <- brio::read_lines(path)
 
   rexprs <- c(
     "[\"']" = "",
     "<li><a href=/images/stories/CSV/|</a></li>|," = "",
     ">" = " ",
-    "[^\x20-\x7E]" = "" # remove non-ASCII characters
+    "[^\x20-\x7E]" = ""
   )
 
   x <- html[stringr::str_which(html, "Version")] |>
@@ -105,12 +88,11 @@ clean_nucc_info <- function(html_path) {
     purrr::list_transpose() |>
     rlang::set_names(c("file_name", "TXT", "version", "release_date"))
 
-  # List -> tibble, cleanse, add download URL prefix
   fastplyr::new_tbl(
     release_date = parse_mdy(x$release_date),
     file_name    = x$file_name,
     version      = x$version,
-    download_url = nucc_url_prefix(x$file_name)
+    download_url = url_prefix(x$file_name)
   ) |>
     collapse::mtt(
       major = as.integer(stringr::str_c(
@@ -124,11 +106,18 @@ clean_nucc_info <- function(html_path) {
       minor = as.integer(stringr::str_extract(version, "(?<=[.]).*$")),
       version = as.double(version)
     ) |>
-    collapse::slt(release_date, version, major, minor, file_name, download_url)
+    collapse::slt(c(
+      "release_date",
+      "version",
+      "major",
+      "minor",
+      "file_name",
+      "download_url"
+    ))
 
 }
 
-get_xwalk_api <- function() {
+xwalk_get_api <- function() {
 
   ss_3NA <- \(x) cheapr::sset(x, cheapr::which_(cheapr::row_na_counts(x) < 3L))
 
@@ -191,11 +180,12 @@ get_xwalk_api <- function() {
     fastplyr::as_tbl()
 }
 
-get_xwalk_src <- function(x) {
+xwalk_get_src <- function(x) {
   purrr::map(x, \(x) RcppSimdJson::fload(json = x, query = "/data")) |>
     purrr::list_rbind() |>
     collapse::mtt(
-      year = extract_year(name, "[12]{1}[0-9]{3}") |> as.integer(),
+      year = extract_year(name, "[12]{1}[0-9]{3}"),
+      year = as.integer(year),
       file = gsub("  ", " ", gsub(" [0-9]{4}|[0-9]{4} ", "", name, perl = TRUE), perl = TRUE),
       size = fs::as_fs_bytes(fileSize),
       ext = tolower(fs::path_ext(downloadURL)),
@@ -206,7 +196,7 @@ get_xwalk_src <- function(x) {
     collapse::mtt(year = ifelse(is.na(year), as.integer(stringr::str_extract(download, "[12]{1}[0-9]{3}")), year))
 }
 
-get_xwalk_info <- function(x) {
+xwalk_get_info <- function(x) {
   x |>
     collapse::sbt(ext == "csv") |>
     collapse::mtt(file_name = gsub("__", "_", gsub(" ", "_", tolower(
@@ -220,7 +210,9 @@ get_xwalk_info <- function(x) {
 
 }
 
-# Pin management functions
+
+
+######## Pin management functions
 pin_update <- function(x, name, title, description, force = FALSE) {
   board <- pins::board_folder(here::here("inst/extdata/pins"))
 

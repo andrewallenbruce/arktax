@@ -1,0 +1,64 @@
+---
+title: "NUCC Notes"
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+source(here::here("data-raw", "fns.R"))
+```
+
+## Define NUCC csv directory & paths
+
+```{r}
+nucc_csv_dir   <- fs::path_abs("nucc/csvs/")
+nucc_csv_paths <- fs::dir_ls(nucc_csv_dir)
+```
+
+## Read NUCC file info
+
+```{r}
+nucc_info <- readr::read_csv(
+  file      = fs::path_abs("nucc/nucc_file_info.csv"),
+  col_types = readr::cols()) |>
+  collapse::mtt(
+    major = as.integer(major), 
+    minor = as.integer(minor),
+    file_name = fs::path_ext_remove(file_name),
+    download_url = NULL)
+
+nucc_info |> 
+  print(n = Inf)
+```
+
+## Read NUCC csv files
+
+```{r}
+#| warning: false
+nucc_list <- read_csv_list(nucc_csv_paths) |>
+  purrr::map(
+    \(data) collapse::sbt(data, stringr::str_detect(Code, "^Copy", negate = TRUE)) |>
+      janitor::clean_names() |>
+      purrr::modify_if(is.character, clean_columns)) |> 
+  purrr::imap(\(x, i) x |> collapse::mtt(file_name = i))
+
+nucc_list |> names()
+```
+
+## Cleaning NUCC data
+
+```{r}
+nucc_overview <- nucc_list$nucc_taxonomy_91 |> 
+  cheapr::overview()
+
+nucc_overview$categorical |> 
+  fastplyr::as_tbl() |> 
+  fastplyr::f_select(
+    column = col, 
+    missing = n_missing, 
+    unique = n_unique) |> 
+  gt::gt() |> 
+  gtExtras::gt_theme_538(quiet = TRUE)
+```
+
