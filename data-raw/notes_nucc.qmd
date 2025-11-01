@@ -12,7 +12,8 @@ source(here::here("data-raw", "fns.R"))
 ## Define NUCC csv directory & paths
 
 ```{r}
-nucc_csv_dir   <- fs::path_abs("nucc/csvs/")
+# nucc_csv_dir   <- fs::path_abs("nucc/csvs/")
+nucc_csv_dir   <- fs::path_abs("data-raw/nucc/csvs/")
 nucc_csv_paths <- fs::dir_ls(nucc_csv_dir)
 ```
 
@@ -20,7 +21,8 @@ nucc_csv_paths <- fs::dir_ls(nucc_csv_dir)
 
 ```{r}
 nucc_info <- readr::read_csv(
-  file      = fs::path_abs("nucc/nucc_file_info.csv"),
+  # file      = fs::path_abs("nucc/nucc_file_info.csv"),
+  file      = fs::path_abs("data-raw/nucc/nucc_file_info.csv"),
   col_types = readr::cols()) |>
   collapse::mtt(
     major = as.integer(major), 
@@ -43,7 +45,11 @@ nucc_list <- read_csv_list(nucc_csv_paths) |>
       purrr::modify_if(is.character, clean_columns)) |> 
   purrr::imap(\(x, i) x |> collapse::mtt(file_name = i))
 
-nucc_list |> names()
+nucc_list |> 
+  names() |> 
+  kit::psort() |>
+  utils::formatOL() |> 
+  cat(sep = "\n")
 ```
 
 ## Cleaning NUCC data
@@ -61,4 +67,3 @@ nucc_overview$categorical |>
   gt::gt() |> 
   gtExtras::gt_theme_538(quiet = TRUE)
 ```
-
