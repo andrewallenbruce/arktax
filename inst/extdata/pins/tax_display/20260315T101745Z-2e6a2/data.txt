@@ -1,0 +1,10 @@
+file: tax_display.rds
+file_size: 11082
+pin_hash: 2e6a2e861ffa1133
+type: rds
+title: NUCC Taxonomy Display Names 2009-2024
+description: Health Care Provider Taxonomy Code Set Display Names 2009-2024
+tags: ~
+urls: ~
+created: 20260315T101745Z
+api_version: 1

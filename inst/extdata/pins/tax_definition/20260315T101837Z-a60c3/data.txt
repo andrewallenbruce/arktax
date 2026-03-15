@@ -1,0 +1,10 @@
+file: tax_definition.rds
+file_size: 75142
+pin_hash: a60c36f63d9ff740
+type: rds
+title: NUCC Taxonomy Definitions 2009-2024
+description: Health Care Provider Taxonomy Code Set Definitions 2009-2024
+tags: ~
+urls: ~
+created: 20260315T101837Z
+api_version: 1

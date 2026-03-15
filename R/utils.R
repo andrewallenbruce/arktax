@@ -6,7 +6,12 @@
 #' @param call `<env>` calling environment
 #' @autoglobal
 #' @noRd
-check_nchar <- function(x, n, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+check_nchar <- function(
+  x,
+  n,
+  arg = rlang::caller_arg(x),
+  call = rlang::caller_env()
+) {
   if (!rlang::is_null(x)) {
     if (!rlang::is_integerish(x = n, n = 1L)) {
       cli::cli_abort("{.arg n} must be a single integer value.", call = call)
@@ -44,17 +49,8 @@ check_nchar <- function(x, n, arg = rlang::caller_arg(x), call = rlang::caller_e
 #' @noRd
 valid_taxonomy_regex <- function(code, negate = FALSE) {
   stringi::stri_detect_regex(
-    str     = code,
+    str = code,
     pattern = "^[1-4][0-9]{2}[0-9A-HJ-NP-Z][0A-IL-NP-X][0-4][0-9][0-69][0-9][X]$",
-    negate  = negate)
-}
-
-#' Read from a URL
-#'
-#' @param url `<chr>` url
-#' @autoglobal
-#' @keywords internal
-#' @export
-read_url <- function(url) {
-  qs::qread_url(url)
+    negate = negate
+  )
 }

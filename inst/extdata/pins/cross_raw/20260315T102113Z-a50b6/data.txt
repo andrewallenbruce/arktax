@@ -1,0 +1,10 @@
+file: cross_raw.rds
+file_size: 11021
+pin_hash: a50b68c68f9a38ad
+type: rds
+title: Medicare Taxonomy Crosswalk 2024
+description: Medicare Provider and Supplier Taxonomy Crosswalk 2024
+tags: ~
+urls: ~
+created: 20260315T102113Z
+api_version: 1

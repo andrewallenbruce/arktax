@@ -1,0 +1,10 @@
+file: tax_raw.rds
+file_size: 402828
+pin_hash: c3dc302229de4c73
+type: rds
+title: NUCC Taxonomy Archive 2009-2024
+description: Health Care Provider Taxonomy Code Set Archive 2009-2024
+tags: ~
+urls: ~
+created: 20260315T101528Z
+api_version: 1

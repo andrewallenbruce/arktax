@@ -3,14 +3,18 @@ months_regex <- stringr::str_remove_all(
   "([Jj]an(?:uary)?|[Ff]eb(?:ruary)?|[Mm]ar(?:ch)?|[Aa]pr(?:il)?|
   [Mm]ay|[Jj]un(?:e)?|[Jj]ul(?:y)?|[Aa]ug(?:ust)?|[Ss]ep(?:tember)?|
   [Oo]ct(?:ober)?|[Nn]ov(?:ember)?|[Dd]ec(?:ember)?)",
-  "\\n\\s*")
+  "\\n\\s*"
+)
 
 extract_year <- function(x) {
   stringr::str_extract(x, "[12]{1}[0-9]{3}")
 }
 
 na_if_blank <- function(x, y = "") {
-  vctrs::vec_slice(x, vctrs::vec_in(x, y, needles_arg = "x", haystack_arg = "y")) <- NA
+  vctrs::vec_slice(
+    x,
+    vctrs::vec_in(x, y, needles_arg = "x", haystack_arg = "y")
+  ) <- NA
   x
 }
 
@@ -43,23 +47,25 @@ parse_Ymd <- function(x) {
 # purrr::list_rbind(names_to = "file")
 read_csv_list <- function(paths, ...) {
   paths |>
-    purrr::map(function(x)
+    purrr::map(function(x) {
       readr::read_csv(
-        file        = x,
-        col_types   = readr::cols(),
+        file = x,
+        col_types = readr::cols(),
         num_threads = 4L,
         ...
-      )) |>
+      )
+    }) |>
     rlang::set_names(basename_sans_ext(paths))
 }
 
 read_csvs <- function(path) {
   readr::read_csv(
-    file           = path,
-    id             = "file_name",
+    file = path,
+    id = "file_name",
     show_col_types = FALSE,
-    col_types      = readr::cols(),
-    num_threads    = 4L) |>
+    col_types = readr::cols(),
+    num_threads = 4L
+  ) |>
     collapse::mtt(file_name = basename_sans_ext(file_name)) |>
     janitor::clean_names() |>
     purrr::modify_if(is.character, clean_columns)
@@ -90,8 +96,8 @@ nucc_clean_info <- function(path) {
 
   fastplyr::new_tbl(
     release_date = parse_mdy(x$release_date),
-    file_name    = x$file_name,
-    version      = x$version,
+    file_name = x$file_name,
+    version = x$version,
     download_url = url_prefix(x$file_name)
   ) |>
     collapse::mtt(
@@ -114,27 +120,31 @@ nucc_clean_info <- function(path) {
       "file_name",
       "download_url"
     ))
-
 }
 
 xwalk_get_api <- function() {
-
   ss_3NA <- \(x) cheapr::sset(x, cheapr::which_(cheapr::row_na_counts(x) < 3L))
 
-  x <- RcppSimdJson::fload(json = "https://data.cms.gov/data.json", query = "/dataset")
+  x <- RcppSimdJson::fload(
+    json = "https://data.cms.gov/data.json",
+    query = "/dataset"
+  )
   x <- collapse::sbt(x, stringr::str_which(title, "[Tt]axonomy"))
 
   temp <- x |>
     collapse::get_elem("distribution", DF.as.list = TRUE) |>
     collapse::rowbind(fill = TRUE) |>
     collapse::fcompute(
-      year       = extract_year(title) |> as.integer(),
-      title      = stringr::str_remove(title, " : [0-9]{4}-[0-9]{2}-[0-9]{2}([0-9A-Za-z]{1,3})?$"),
-      format     = kit::iif(!is.na(description), description, format, nThread = 4L),
-      modified   = parse_Ymd(modified),
+      year = extract_year(title) |> as.integer(),
+      title = stringr::str_remove(
+        title,
+        " : [0-9]{4}-[0-9]{2}-[0-9]{2}([0-9A-Za-z]{1,3})?$"
+      ),
+      format = kit::iif(!is.na(description), description, format, nThread = 4L),
+      modified = parse_Ymd(modified),
       identifier = accessURL,
-      download   = cheapr::lag_(downloadURL, n = -1L),
-      resources  = resourcesAPI
+      download = cheapr::lag_(downloadURL, n = -1L),
+      resources = resourcesAPI
     ) |>
     collapse::roworder(title, -year)
 
@@ -142,14 +152,18 @@ xwalk_get_api <- function() {
 
   base <- x |>
     collapse::mtt(
-      modified    = parse_Ymd(modified),
+      modified = parse_Ymd(modified),
       periodicity = accrualPeriodicity,
-      references  = unlist(references, use.names = FALSE),
-      dictionary  = describedBy,
-      site        = landingPage
+      references = unlist(references, use.names = FALSE),
+      dictionary = describedBy,
+      site = landingPage
     ) |>
     collapse::join(
-      collapse::sbt(temp, format == "latest", c("title", "download", "resources")),
+      collapse::sbt(
+        temp,
+        format == "latest",
+        c("title", "download", "resources")
+      ),
       on = "title",
       verbose = 0,
       multiple = TRUE
@@ -186,30 +200,49 @@ xwalk_get_src <- function(x) {
     collapse::mtt(
       year = extract_year(name, "[12]{1}[0-9]{3}"),
       year = as.integer(year),
-      file = gsub("  ", " ", gsub(" [0-9]{4}|[0-9]{4} ", "", name, perl = TRUE), perl = TRUE),
+      file = gsub(
+        "  ",
+        " ",
+        gsub(" [0-9]{4}|[0-9]{4} ", "", name, perl = TRUE),
+        perl = TRUE
+      ),
       size = fs::as_fs_bytes(fileSize),
       ext = tolower(fs::path_ext(downloadURL)),
       download = downloadURL,
-      .keep = c("year", "file", "size", "ext")) |>
+      .keep = c("year", "file", "size", "ext")
+    ) |>
     fastplyr::f_fill(year) |>
     fastplyr::as_tbl() |>
-    collapse::mtt(year = ifelse(is.na(year), as.integer(stringr::str_extract(download, "[12]{1}[0-9]{3}")), year))
+    collapse::mtt(
+      year = ifelse(
+        is.na(year),
+        as.integer(stringr::str_extract(download, "[12]{1}[0-9]{3}")),
+        year
+      )
+    )
 }
 
 xwalk_get_info <- function(x) {
   x |>
     collapse::sbt(ext == "csv") |>
-    collapse::mtt(file_name = gsub("__", "_", gsub(" ", "_", tolower(
-      URLdecode(basename(download))
-    )))) |>
+    collapse::mtt(
+      file_name = gsub(
+        "__",
+        "_",
+        gsub(
+          " ",
+          "_",
+          tolower(
+            URLdecode(basename(download))
+          )
+        )
+      )
+    ) |>
     collapse::gby(file_name) |>
     collapse::mtt(id = collapse::seqid(year)) |>
     collapse::fungroup() |>
-    collapse::mtt(file_name = glue::glue("Y{year}_{id}_{file_name}"),
-                  id = NULL)
-
+    collapse::mtt(file_name = glue::glue("Y{year}_{id}_{file_name}"), id = NULL)
 }
-
 
 
 ######## Pin management functions
@@ -219,11 +252,12 @@ pin_update <- function(x, name, title, description, force = FALSE) {
   board |>
     pins::pin_write(
       x,
-      name        = name,
-      title       = title,
+      name = name,
+      title = title,
       description = description,
-      type        = "qs",
-      force_identical_write = force)
+      type = "rds",
+      force_identical_write = force
+    )
 
   board |> pins::write_board_manifest()
 }

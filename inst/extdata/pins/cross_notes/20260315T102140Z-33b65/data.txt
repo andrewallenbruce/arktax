@@ -1,0 +1,10 @@
+file: cross_notes.rds
+file_size: 1347
+pin_hash: 33b659f7dd6c5062
+type: rds
+title: Medicare Taxonomy Crosswalk Footnotes 2024
+description: Medicare Provider and Supplier Taxonomy Crosswalk Footnotes 2024
+tags: ~
+urls: ~
+created: 20260315T102140Z
+api_version: 1

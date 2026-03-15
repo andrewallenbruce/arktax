@@ -1,0 +1,10 @@
+file: tax_hierarchy.rds
+file_size: 13774
+pin_hash: 50c385ebdf3816bf
+type: rds
+title: NUCC Taxonomy Hierarchy
+description: Health Care Provider Taxonomy Code Set Hierarchy 2009-2024
+tags: ~
+urls: ~
+created: 20260315T101931Z
+api_version: 1
