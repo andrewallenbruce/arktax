@@ -1,0 +1,53 @@
+# Changelog
+
+## arktax 0.0.1.9009 (2026-03-15)
+
+- spring cleaning
+- xwalk cleaning
+- X-walk cleaning pipeline
+
+## arktax 0.0.1.9008 (2025-10-29)
+
+- tested xwalk download pipeline
+- NUCC raw processing
+- `valid_taxonomy_regex` function
+
+## arktax 0.0.1.9007 (2025-10-24)
+
+- streamlined download pipeline
+- refining xwalk pipeline
+- Refactoring pipelines
+- adding medicare specialty-taxonomy crosswalk download pipeline
+- more cleaning
+- raw NUCC csv processing pipeline
+
+## arktax 0.0.1.9006 (2025-10-22)
+
+- cleaning and updating package
+
+## arktax 0.0.1.9005 (2024-12-26)
+
+- update standalone-helpers
+
+## arktax 0.0.1.9004 (2024-12-16)
+
+- updated standalone-helpers
+- updated standalone-helpers (bug fixes)
+- pkgdown reference tweaks
+- updated standalone-helpers
+- fixed bug in taxonomy functions
+- added standalone-helpers from fuimus
+- removed fuimus as dependency
+- using onLoad in taxonomy functions
+- updated search_in usage from fuimus
+- added medicare specialty to taxonomy crosswalk functions
+- prepended taxonomy pins with “tax\_”
+- renamed all taxonomy code arguments from `code` to `taxonomy_code`
+
+## arktax 0.0.1 (2024-11-29)
+
+- Added `taxonomy` functions
+
+## arktax 0.1.0.9000 (2024-11-16)
+
+- Initialize package
