@@ -1,23 +1,39 @@
 source(here::here("data-raw", "fns.R"))
 
-xwalk_api  <- xwalk_get_api()
-xwalk_src  <- xwalk_get_src(xwalk_api$resources)
+xwalk_api <- xwalk_get_api()
+xwalk_src <- xwalk_get_src(xwalk_api$resources)
 xwalk_info <- xwalk_get_info(xwalk_src)
 
 # Create XWALK directory
 xwalk_dir <- fs::path_abs("data-raw/xwalk/")
 
-if (!fs::dir_exists(xwalk_dir)) fs::dir_create(xwalk_dir)
+if (!fs::dir_exists(xwalk_dir)) {
+  fs::dir_create(xwalk_dir)
+}
 
 # Save XWALK info files
-readr::write_csv(x = xwalk_api, file = fs::path(xwalk_dir, "xwalk_api.csv"), num_threads = 4L)
-readr::write_csv(x = xwalk_src, file = fs::path(xwalk_dir, "xwalk_src.csv"), num_threads = 4L)
-readr::write_csv(x = xwalk_info, file = fs::path(xwalk_dir, "xwalk_info.csv"), num_threads = 4L)
+readr::write_csv(
+  x = xwalk_api,
+  file = fs::path(xwalk_dir, "xwalk_api.csv"),
+  num_threads = 4L
+)
+readr::write_csv(
+  x = xwalk_src,
+  file = fs::path(xwalk_dir, "xwalk_src.csv"),
+  num_threads = 4L
+)
+readr::write_csv(
+  x = xwalk_info,
+  file = fs::path(xwalk_dir, "xwalk_info.csv"),
+  num_threads = 4L
+)
 
 # Create XWALK csv directory
 xwalk_csv_dir <- fs::path(xwalk_dir, "csvs")
 
-if (!fs::dir_exists(xwalk_csv_dir)) fs::dir_create(xwalk_csv_dir)
+if (!fs::dir_exists(xwalk_csv_dir)) {
+  fs::dir_create(xwalk_csv_dir)
+}
 
 # Download XWALK csvs
 curl::multi_download(

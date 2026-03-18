@@ -85,13 +85,15 @@ nucc_clean_info <- function(path) {
     "[\"']" = "",
     "<li><a href=/images/stories/CSV/|</a></li>|," = "",
     ">" = " ",
-    "[^\x20-\x7E]" = ""
+    "[^\x20-\x7E]" = "",
+    " &amp;.*" = ""
   )
 
   x <- html[stringr::str_which(html, "Version")] |>
     stringr::str_replace_all(rexprs) |>
     stringr::str_split(" ") |>
     purrr::list_transpose() |>
+    purrr::compact() |>
     rlang::set_names(c("file_name", "TXT", "version", "release_date"))
 
   fastplyr::new_tbl(
@@ -198,7 +200,7 @@ xwalk_get_src <- function(x) {
   purrr::map(x, \(x) RcppSimdJson::fload(json = x, query = "/data")) |>
     purrr::list_rbind() |>
     collapse::mtt(
-      year = extract_year(name, "[12]{1}[0-9]{3}"),
+      year = extract_year(name),
       year = as.integer(year),
       file = gsub(
         "  ",
