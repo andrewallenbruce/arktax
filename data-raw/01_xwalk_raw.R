@@ -19,35 +19,64 @@ xwalk_notes <- readr::read_csv(
   num_threads = 4L,
   col_names = "note"
 ) |>
-  purrr::modify_if(is.character, clean_columns)
-
-xwalk_notes <- xwalk_notes |>
+  purrr::modify_if(is.character, clean_columns) |>
   collapse::mtt(
-    foot = 1L:nrow(xwalk_notes),
+    foot = 1:14,
     note = stringr::str_remove_all(note, "^\\[[0-9]{1,2}\\]\\s*")
   )
 
-xwalk_notes |>
-  _$note |>
-  cat(sep = "\n")
+cat(xwalk_notes$footnote, sep = "\n")
+
+xwalk_csvs <- read_csv_list(xwalk_path_csvs) |>
+  rlang::set_names(basename_sans_ext(xwalk_path_csvs))
+
+xwalk <- xwalk_csvs$Y2025_1_medicare_provider_and_supplier_taxonomy_crosswalk_october_2025 |>
+  rlang::set_names(c("spec", "spec_description", "txn", "txn_description")) |>
+  collapse::mtt(
+    foot = cheapr::case(
+      stringr::str_length(spec) == 5L ~ strtoi(substr(spec, 4L, 4L)),
+      stringr::str_length(spec) == 6L ~ strtoi(substr(spec, 4L, 5L)),
+      .default = NA_integer_
+    ),
+    spec = substr(spec, 1L, 2L)
+  )
+
+xwalk[!cheapr::is_na(xwalk$foot), ]
+
+xwalk <- collapse::join(
+  xwalk,
+  xwalk_notes[cheapr::counts(xwalk$foot)$key[-1], ],
+  on = "foot"
+) |>
+  collapse::mtt(
+    isNA = cheapr::is_na(note),
+    footnote = ifelse(isNA, glue::as_glue("-"), glue::glue("[{foot}]: {note}")),
+    isNA = NULL,
+    foot = NULL,
+    note = NULL
+  )
+
+cheapr::counts(xwalk$footnote)
+
+usethis::use_data(xwalk, overwrite = TRUE)
 
 #### CSVS
 # Read xwalk csvs
 xwalk_csvs <- read_csv_list(xwalk_path_csvs) |>
   rlang::set_names(basename_sans_ext(xwalk_path_csvs)) |>
-  purrr::list_rbind(names_to = "file_name") |>
+  collapse::rowbind(idcol = "file", fill = TRUE) |>
   janitor::clean_names() |>
   collapse::sbt(
-    !is.na(medicare_specialty_code) &
+    !cheapr::is_na(medicare_specialty_code) &
       stringr::str_detect(medicare_specialty_code, "^\\[", negate = TRUE)
   ) |>
   collapse::mtt(
-    medicare_specialty_code = dplyr::if_else(
-      stringr::str_length(medicare_specialty_code) == 1,
+    medicare_specialty_code = cheapr::if_else_(
+      stringr::str_length(medicare_specialty_code) == 1L,
       paste0("0", medicare_specialty_code),
       medicare_specialty_code
     ),
-    order = stringr::str_extract(file_name, "(?<=crosswalk[_]|list[_]).*$"),
+    order = stringr::str_extract(file, "(?<=crosswalk[_]|list[_]).*$"),
     order = stringr::str_extract(order, months_regex),
     order = cheapr::val_match(
       order,
@@ -59,9 +88,9 @@ xwalk_csvs <- read_csv_list(xwalk_path_csvs) |>
       .default = 1L
     ),
     order = as.integer(order),
-    year = extract_year(file_name),
+    year = extract_year(file),
     year = as.integer(year),
-    file_name = NULL
+    file = NULL
   ) |>
   collapse::roworder(year, order) |>
   collapse::colorder(year, order) |>

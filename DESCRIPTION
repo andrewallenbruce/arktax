@@ -1,5 +1,5 @@
 Package: arktax
-Title: NUCC Healthcare Provider Taxonomy Codes
+Title: Healthcare Provider Taxonomy Codes
 Version: 0.0.1.9010
 Authors@R: 
     person(c("Andrew", "Allen"), "Bruce", , "andrewallenbruce@gmail.com", role = c("aut", "cre", "cph"))
@@ -34,3 +34,6 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",
     "roxyglobals::global_roclet"))
 RoxygenNote: 7.3.3
+Depends: 
+    R (>= 3.5)
+LazyData: true

@@ -21,13 +21,12 @@
 #' @autoglobal
 #'
 #' @export
-taxonomy_raw <- function(year = NULL,
-                         version = NULL,
-                         taxonomy_code = NULL) {
-
+taxonomy_raw <- function(year = NULL, version = NULL, taxonomy_code = NULL) {
   check_nchar(taxonomy_code, 10)
 
-  if (!exists(".tax_raw")) .tax_raw <- get_pin("tax_raw")
+  if (!exists(".tax_raw")) {
+    .tax_raw <- get_pin("tax_raw")
+  }
 
   x <- search_in(.tax_raw, "year", year)
   x <- search_in(x, "code", taxonomy_code)
@@ -52,10 +51,11 @@ taxonomy_raw <- function(year = NULL,
 #'
 #' @export
 taxonomy_sources <- function(taxonomy_code = NULL) {
-
   check_nchar(taxonomy_code, 10)
 
-  if (!exists(".tax_sources")) .tax_sources <- get_pin("tax_sources")
+  if (!exists(".tax_sources")) {
+    .tax_sources <- get_pin("tax_sources")
+  }
 
   search_in(.tax_sources, "code", taxonomy_code)
 }
@@ -76,10 +76,11 @@ taxonomy_sources <- function(taxonomy_code = NULL) {
 #'
 #' @export
 taxonomy_changelog <- function(taxonomy_code = NULL) {
-
   check_nchar(taxonomy_code, 10)
 
-  if (!exists(".tax_changelog")) .tax_changelog <- get_pin("tax_changelog")
+  if (!exists(".tax_changelog")) {
+    .tax_changelog <- get_pin("tax_changelog")
+  }
 
   search_in(.tax_changelog, "code", taxonomy_code)
 }
@@ -108,13 +109,16 @@ taxonomy_changelog <- function(taxonomy_code = NULL) {
 #' @autoglobal
 #'
 #' @export
-taxonomy_hierarchy <- function(taxonomy_code = NULL,
-                               taxonomy_level = NULL,
-                               taxonomy_title = NULL) {
-
+taxonomy_hierarchy <- function(
+  taxonomy_code = NULL,
+  taxonomy_level = NULL,
+  taxonomy_title = NULL
+) {
   check_nchar(taxonomy_code, 10)
 
-  if (!exists(".tax_hierarchy")) .tax_hierarchy <- get_pin("tax_hierarchy")
+  if (!exists(".tax_hierarchy")) {
+    .tax_hierarchy <- get_pin("tax_hierarchy")
+  }
 
   x <- search_in(.tax_hierarchy, "taxonomy_code", taxonomy_code)
   x <- search_in(x, "taxonomy_level", taxonomy_level)
@@ -139,10 +143,11 @@ taxonomy_hierarchy <- function(taxonomy_code = NULL,
 #'
 #' @export
 taxonomy_display <- function(taxonomy_code = NULL) {
-
   check_nchar(taxonomy_code, 10)
 
-  if (!exists(".tax_display")) .tax_display <- get_pin("tax_display")
+  if (!exists(".tax_display")) {
+    .tax_display <- get_pin("tax_display")
+  }
 
   search_in(.tax_display, "taxonomy_code", taxonomy_code)
 }
@@ -163,10 +168,11 @@ taxonomy_display <- function(taxonomy_code = NULL) {
 #'
 #' @export
 taxonomy_definition <- function(taxonomy_code = NULL) {
-
   check_nchar(taxonomy_code, 10)
 
-  if (!exists(".tax_definition")) .tax_definition <- get_pin("tax_definition")
+  if (!exists(".tax_definition")) {
+    .tax_definition <- get_pin("tax_definition")
+  }
 
   search_in(.tax_definition, "taxonomy_code", taxonomy_code)
 }
