@@ -1,4 +1,4 @@
-# arktax: NUCC Healthcare Provider Taxonomy Codes
+# arktax: Healthcare Provider Taxonomy Codes
 
 Programmatic interface to the NUCC Health Care Provider Taxonomy Code
 Set, including the raw codesets from 2009 to present, various different
